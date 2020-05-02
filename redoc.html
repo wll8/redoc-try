@@ -3,16 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="unpkg.com/swagger-ui-dist@3.25.1/swagger-ui.css">
   <title>Document</title>
 </head>
 <body>
   <div class="div">一</div>
-  <redoc spec-url="https://petstore.swagger.io/v2/swagger.json"></redoc>
+  <redoc spec-url="petstore.swagger.io/v2/swagger.json"></redoc>
+  <!-- <redoc spec-url="https://fsc.zjhgrl.com/fsc/v2/api-docs?group=souche"></redoc> -->
   <!-- <redoc spec-url="https://httpbin.org/spec.json"></redoc> -->
   <div>二</div>
   <div class="swaggerBox hide">
     <div id="swagger-ui"></div>
     <style>
+      /* 重置 swagger-ui 的样式 */
+      .swagger-ui .wrapper {
+        padding: 0;
+      }
       body {
         position: relative;
       }
@@ -35,14 +41,26 @@
         visibility: visible;
         cursor: initial;
       }
+      .fullApiBox {
+        /* position: relative; */
+      }
+      .tryBtn {
+        margin-right: 10px;
+      }
+      .fullApiBox .swaggerShadow {
+        width: 100%;
+        /* height: 100px; */
+        /* content: " ";
+        background-color: #ccc;
+        display: block; */
+      }
     </style>
   </div>
   <div>三</div>
-  <script src="https://cdn.jsdelivr.net/npm/redoc/bundles/redoc.standalone.js"> </script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@3.25.1/swagger-ui.css">
-  <script src="https://unpkg.com/swagger-ui-dist@3.25.1/swagger-ui-bundle.js"></script>
+  <script src="unpkg.com/redoc@2.0.0-rc.28/bundles/redoc.standalone.js"> </script>
+  <script src="cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.js"></script>
+  <script src="cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.js"></script>
+  <script src="unpkg.com/swagger-ui-dist@3.25.1/swagger-ui-bundle.js"></script>
   <script>
     function debounce(fn,wait){ // 防抖
         var timer = null;
@@ -92,7 +110,7 @@
   </script>
   <script>
     const ui = SwaggerUIBundle({
-      url: "https://petstore.swagger.io/v2/swagger.json",
+      url: "petstore.swagger.io/v2/swagger.json",
       dom_id: '#swagger-ui',
     })
   </script>
@@ -105,46 +123,62 @@
       `)
       $(`.tryBtn`).click(function(event) {
         const $tryBtn = $(this)
-        event.stopPropagation()
+        const $operation = $tryBtn.parents(`[data-section-id^="operation/"]`)
+
+        { // 初始化, 例如卸载监听, 删除临时类名或元素
+          // $(`[data-section-id^="operation/"]`).removeClass(`try`)
+          $(`.swaggerShadow`).remove()
+          event.stopPropagation()
+        }
+        console.log("$operation.hasClass(`try`)", $tryBtn, $operation.hasClass(`try`))
+        if($operation.hasClass(`try`) === true) {
+          $(`.swaggerBox`).removeClass(`show`)
+          $(`.swaggerBox`).addClass(`hide`)
+          $operation.removeClass(`try`)
+          return false
+        } else {
+          $(`[data-section-id^="operation/"]`).removeClass(`try`)
+          $operation.addClass(`try`)
+        }
+        $(`.try>div>div:nth-child(2)`).addClass(`apiBlock`)
+        $(`.try .apiBlock>div:nth-child(1)`).addClass(`fullApiBox`)
+        $(`.try .apiBlock>div>div:nth-child(1)`).addClass(`fullApi`)
+        $(`.try .fullApiBox`).append(`<div class="swaggerShadow"></div>`)
+
+
         // 获取点击的 method 和 api
-        const fullApi = $tryBtn.parent().text().replace(tryText, '').trim()
+        const fullApi = $(`.try .fullApi`).text().replace(tryText, '').trim()
         const [, method, api] = fullApi.match(/(\w+)(.*)/)
         console.log(` method, api`,  method, api)
 
         // 移动 swagger 到点击的 api 位置
-        const $operation = $tryBtn.parents(`[data-section-id^="operation/"]`)
-        $(`[data-section-id^="operation/"]`).removeClass(`try`)
-        $operation.addClass(`try`)
-        const $tabs = $operation.find(`[data-tabs="true"]`)
         let pos = {}
-        if($tabs.length > 0) {
-          pos = getAbsolutePosition($tabs[0])
-        } else { // 如果不存在, 那就移动到点击的 api 位置下面好了
-          pos = getAbsolutePosition($tryBtn.parent()[0])
-          pos.top = pos.top + pos.height
-          pos.height = `50vh`
-        }
+        pos = getAbsolutePosition($(`.try .swaggerShadow`)[0])
         pos = Object.keys(pos).reduce((prev, cur, index) => {
           const val = pos[cur]
           return {
             ...prev,
-            [cur]: typeof(pos[cur]) === `number` ? `${val}px` : val,
+            [cur]: typeof(val) === `number` ? (val > 0 ? `${val}px` : undefined) : val,
           }
         }, {})
         // $tabs.addClass(`hide`)
 
         console.log(`pospos`, pos)
-        let oldHeight = `${pos.height}`
+        let oldHeight = pos.height ? `${pos.height}` : undefined
         $(`.swaggerBox`).css({
           left: `${pos.left}`,
           top: `${pos.top}`,
           width: `${pos.width}`,
           height: oldHeight,
         }).removeClass(`hide`).addClass('show')
+        $(`.try .swaggerShadow`).css({
+          height: oldHeight,
+        })
 
         // 滚动 swagger 视图到相同的 api 位置
-        const $swaggerApiDom = $(`.opblock-summary-${method} [data-path="${api}"]`)
-        $(`.swaggerBox`).scrollTo($swaggerApiDom.parent())
+        const selStr = `.opblock-summary-${method} [data-path="${api}"]`
+        console.log(`selStr`, selStr)
+        const $swaggerApiDom = $(selStr)
         const $opblock = $swaggerApiDom.parents(`.opblock:not(.is-open)`)
         if($opblock.length) {
           // 如果没有展示, 就展示这个 api
@@ -153,10 +187,17 @@
           $('.opblock').off(domChange)
           $opblock.on(domChange, function(ev) {
             const pos = getAbsolutePosition($opblock[0])
+            if(pos.height === 0) {
+              return false; // 不能等于0
+            }
             let newHeight = `${pos.height}px`
-            if(oldHeight !== newHeight) {
+            if((oldHeight !== newHeight) || (pos.height === 0)) {
               console.log({oldHeight, newHeight})
+              $(`.swaggerBox`).scrollTo($swaggerApiDom.parent())
               $(`.swaggerBox`).css({
+                height: newHeight,
+              })
+              $(`.try .swaggerShadow`).css({
                 height: newHeight,
               })
               oldHeight = newHeight
