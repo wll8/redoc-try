@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="div">一</div>
+  <redoc spec-url="https://petstore.swagger.io/v2/swagger.json"></redoc>
+  <!-- <redoc spec-url="https://httpbin.org/spec.json"></redoc> -->
+  <div>二</div>
+  <div class="swaggerBox hide">
+    <div id="swagger-ui"></div>
+    <style>
+      body {
+        position: relative;
+      }
+      .swaggerBox {
+        background-color: #fff;
+        width: 200px;
+        height: 100px;
+        /* overflow: scroll; */
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+      }
+      .hide {
+        visibility: hidden;
+        cursor: none;
+      }
+      .show {
+        visibility: visible;
+        cursor: initial;
+      }
+    </style>
+  </div>
+  <div>三</div>
+  <script src="https://cdn.jsdelivr.net/npm/redoc/bundles/redoc.standalone.js"> </script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@3.25.1/swagger-ui.css">
+  <script src="https://unpkg.com/swagger-ui-dist@3.25.1/swagger-ui-bundle.js"></script>
+  <script>
+    function debounce(fn,wait){ // 防抖
+        var timer = null;
+        return function(){
+            if(timer !== null){
+                clearTimeout(timer);
+            }
+            timer = setTimeout(fn,wait);
+        }
+    }
+    function watchStyle(dom, cb) { // 监听样式修改
+      var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver
+      var element = dom
+      var observer = new MutationObserver((mutationList) => {
+        let width = getComputedStyle(element).getPropertyValue('width')
+        let height = getComputedStyle(element).getPropertyValue('height')
+        console.log(`update`, {
+          width,
+          height,
+        })
+        cb && cb({
+          width,
+          height,
+        })
+      })
+      observer.observe(element, { attributes: true, attributeFilter: ['style'], attributeOldValue: true })
+      return observer
+      // observer.disconnect()
+      // observer.takeRecords()
+    }
+    function getAbsolutePosition(domObj) { // 获取元素位置及大小
+      //如果函数没有传入值的话返回对象为空的
+      if(!domObj)return null;
+      var w = domObj.offsetWidth, h = domObj.offsetHeight;
+      //从目标元素开始向外遍历，累加top和left值
+      var t, l;
+      for (t = domObj.offsetTop, l = domObj.offsetLeft; domObj = domObj.offsetParent;) {
+          t += domObj.offsetTop;
+          l += domObj.offsetLeft;
+      }
+      var r = document.body.offsetWidth - w - l;
+      var b = document.body.offsetHeight - h - t;
+
+      // 返回定位元素的坐标集合
+      return {width: w, height: h, top: t, left: l, right: r, bottom: b};
+    }
+  </script>
+  <script>
+    const ui = SwaggerUIBundle({
+      url: "https://petstore.swagger.io/v2/swagger.json",
+      dom_id: '#swagger-ui',
+    })
+  </script>
+  <script>
+    setTimeout(() => {
+      // 添加尝试按钮
+      const tryText = `try`
+      $(`.http-verb`).before(`
+        <button class="tryBtn">${tryText}</button>
+      `)
+      $(`.tryBtn`).click(function(event) {
+        const $tryBtn = $(this)
+        event.stopPropagation()
+        // 获取点击的 method 和 api
+        const fullApi = $tryBtn.parent().text().replace(tryText, '').trim()
+        const [, method, api] = fullApi.match(/(\w+)(.*)/)
+        console.log(` method, api`,  method, api)
+
+        // 移动 swagger 到点击的 api 位置
+        const $operation = $tryBtn.parents(`[data-section-id^="operation/"]`)
+        $(`[data-section-id^="operation/"]`).removeClass(`try`)
+        $operation.addClass(`try`)
+        const $tabs = $operation.find(`[data-tabs="true"]`)
+        let pos = {}
+        if($tabs.length > 0) {
+          pos = getAbsolutePosition($tabs[0])
+        } else { // 如果不存在, 那就移动到点击的 api 位置下面好了
+          pos = getAbsolutePosition($tryBtn.parent()[0])
+          pos.top = pos.top + pos.height
+          pos.height = `50vh`
+        }
+        pos = Object.keys(pos).reduce((prev, cur, index) => {
+          const val = pos[cur]
+          return {
+            ...prev,
+            [cur]: typeof(pos[cur]) === `number` ? `${val}px` : val,
+          }
+        }, {})
+        // $tabs.addClass(`hide`)
+
+        console.log(`pospos`, pos)
+        let oldHeight = `${pos.height}`
+        $(`.swaggerBox`).css({
+          left: `${pos.left}`,
+          top: `${pos.top}`,
+          width: `${pos.width}`,
+          height: oldHeight,
+        }).removeClass(`hide`).addClass('show')
+
+        // 滚动 swagger 视图到相同的 api 位置
+        const $swaggerApiDom = $(`.opblock-summary-${method} [data-path="${api}"]`)
+        $(`.swaggerBox`).scrollTo($swaggerApiDom.parent())
+        const $opblock = $swaggerApiDom.parents(`.opblock:not(.is-open)`)
+        if($opblock.length) {
+          // 如果没有展示, 就展示这个 api
+          $swaggerApiDom.click()
+          const domChange = `DOMAttrModified DOMAttributeNameChanged DOMCharacterDataModified DOMElementNameChanged DOMNodeInserted DOMNodeInsertedIntoDocument DOMNodeRemoved DOMNodeRemovedFromDocument DOMSubtreeModified`
+          $('.opblock').off(domChange)
+          $opblock.on(domChange, function(ev) {
+            const pos = getAbsolutePosition($opblock[0])
+            let newHeight = `${pos.height}px`
+            if(oldHeight !== newHeight) {
+              console.log({oldHeight, newHeight})
+              $(`.swaggerBox`).css({
+                height: newHeight,
+              })
+              oldHeight = newHeight
+            }
+          })
+        }
+        // const operation = $operation.attr(`data-section-id`).replace(`operation/`, '')
+        // const tag = $operation.prevAll(`[data-section-id^="tag/"]`).eq(0).attr(`data-section-id`).replace(`tag/`, '')
+        // const api = `${tag}/${operation}`
+        // console.log(`api`, api)
+        // window.open(`https://petstore.swagger.io/#/${api}`)
+      })
+    }, 4000);
+  </script>
+</body>
+</html>
