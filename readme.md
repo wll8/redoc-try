@@ -1,11 +1,13 @@
 ## redoc try
 在 redoc 上添加像 swagger 一样的 try 功能.
 
-![re-doc try](redoc_WX20200518-152825.png)
+Try [redoc-try](https://github.com/wll8/redoc-try), use `swagger Try it out` in` redoc` project.
+
+![re-doc try](https://github.com/wll8/redoc-try/raw/master/redoc_WX20200518-152825.png)
 
 ## 如何使用?
 
-[get video](https://github.com/wll8/static/blob/master/Video_20200518145834_redoc_show.mp4?raw=true)
+[show video](https://cdn.jsdelivr.net/gh/wll8/static/Video_20200518145834_redoc_show.mp4)
 
 ``` diff
  <body>
