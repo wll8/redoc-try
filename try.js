@@ -94,8 +94,12 @@ function initTry(cfg) {
   $('head').append(`
     <style>
       /* 重置 swagger-ui 的样式 */
-      .swagger-ui .wrapper {
+      body .swagger-ui .wrapper {
         padding: 0;
+      }
+      body .swagger-ui .opblock.opblock-get .opblock-summary {
+        cursor: not-allowed;
+        pointer-events: none;
       }
       /* 以 body 为相对元素, 设置 swaggerBox 的位置 */
       body {
@@ -121,12 +125,14 @@ function initTry(cfg) {
       }
       .tryBtn {
         margin-right: 10px;
+        background-color: #fff;
       }
     </style>
   `)
 
   const openApi = cfg.openApi
   Redoc.init(openApi, {
+    enableConsole: true,
     // scrollYOffset: 50
   }, document.getElementById('redoc-container'), () => {
     const ui = SwaggerUIBundle({
