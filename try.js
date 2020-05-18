@@ -77,7 +77,7 @@ seriesLoadScriptsCss([
   initTry({
     // petstore.swagger.io/v2/swagger.json
     // https://httpbin.org/spec.json
-    openApi: `openapi.yaml`
+    openApi: `https://httpbin.org/spec.json`
   })
 })
 
@@ -154,14 +154,15 @@ function trySwagger(cfg) {
   $(`.tryBtn`).click(function (event) {
     event.stopPropagation()
     const $tryBtn = $(this)
+    console.log(`$tryBtn`, $tryBtn)
     $(`.swaggerShadow`).remove() // 先清除所有临时元素
-    const $operation = $tryBtn.parents(`[data-section-id^="operation/"]`) // 获取最外层 api box
+    const $operation = $tryBtn.parents(`[data-section-id]`) // 获取最外层 api box
     if ($operation.hasClass(`try`) === true) { // 如果当前 api 已经是 try 状态, 则卸载并退出函数
       $(`.swaggerBox`).addClass(`hide`).removeClass(`show`)
       $operation.removeClass(`try`)
       return false
     }
-    $(`[data-section-id^="operation/"]`).removeClass(`try`) // 删除其他所有 api 的 try 类名
+    $(`[data-section-id]`).removeClass(`try`) // 删除其他所有 api 的 try 类名
     $operation.addClass(`try`) // 给当前点击的 api 添加 try 类名
 
     // 以下 3 行给一些必要元素添加类名, 以方便获取或识别
