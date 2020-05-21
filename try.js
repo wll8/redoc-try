@@ -69,19 +69,21 @@ function getAbsolutePosition(domObj) { // 获取元素位置及大小
   return { width: w, height: h, top: t, left: l, right: r, bottom: b };
 }
 
-seriesLoadScriptsCss([
-  `https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`,
-  `https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`,
-  `https://unpkg.com/swagger-ui-dist@3.25.1/swagger-ui-bundle.js`,
-], () => {
-  initTry({
-    // petstore.swagger.io/v2/swagger.json
-    // https://httpbin.org/spec.json
-    openApi: `https://httpbin.org/spec.json`
+function initTry (cfg) {
+  seriesLoadScriptsCss([
+    `https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`,
+    `https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`,
+    `https://unpkg.com/swagger-ui-dist@3.25.1/swagger-ui-bundle.js`,
+  ], () => {
+    initTryOk({
+      // https://petstore.swagger.io/v2/swagger.json
+      openApi: `https://httpbin.org/spec.json`,
+      ...cfg,
+    })
   })
-})
+}
 
-function initTry(cfg) {
+function initTryOk (cfg) {
   // dom
   $('body').append(`
     <div class="swaggerBox hide">
