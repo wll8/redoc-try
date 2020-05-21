@@ -11,7 +11,7 @@ Add `Try it out` function like [swagger](https://petstore.swagger.io/) on [redoc
 <body>
   <div id="redoc-container"></div>
   <script src="https://unpkg.com/redoc@2.0.0-rc.28/bundles/redoc.standalone.js"> </script>
-  <script src="https://cdn.jsdelivr.net/gh/wll8/redoc-try/try.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/wll8/redoc-try@1.0.0/try.js"></script>
   <script>
     initTry({
       openApi: `https://petstore.swagger.io/v2/swagger.json`, // openApi address
