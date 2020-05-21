@@ -7,7 +7,14 @@
 </head>
 <body>
   <div id="redoc-container"></div>
-  <script src="unpkg.com/redoc@2.0.0-rc.28/bundles/redoc.standalone.js"> </script>
-  <script src="try.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/redoc@2.0.0-rc.28/bundles/redoc.standalone.min.js"> </script>
+  <script src="https://cdn.jsdelivr.net/gh/wll8/redoc-try/try.js"></script>
+  <script>
+    initTry({
+      openApi: `https://petstore.swagger.io/v2/swagger.json`, // openApi address
+      // tryText: `try`, // Try button text
+      // trySwaggerInApi: true, // Whether to display swagger debugging window under api?
+    })
+  </script>
 </body>
 </html>
