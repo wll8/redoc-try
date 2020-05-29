@@ -253,6 +253,7 @@ function trySwagger(cfg) {
         }
       }
     }
+    setTimeout(changeFn, 500) // 如果没有 dom 改变, 那也执行, 在 500 毫秒(等待样式展示)之后
     $opblock.on(domChange, debounce(changeFn, 100))
   })
 
