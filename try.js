@@ -122,9 +122,15 @@ function initTryOk (cfg) {
       body {
         position: relative;
       }
+      @media print, screen and (max-width: 85rem) {
+        .dtUibw {
+          padding: 4px;
+        }
+      }
       .swaggerBox {
+        border-radius: 4px;
         background-color: #fff;
-        width: 100vw;
+        width: 100%;
         height: 100vh;
         overflow: hidden;
         position: absolute;
@@ -135,6 +141,8 @@ function initTryOk (cfg) {
       .hide {
         visibility: hidden;
         cursor: none;
+        width: 0;
+        height: 0;
       }
       .show {
         visibility: visible;
@@ -263,6 +271,7 @@ function trySwagger(cfg) {
         }
       }
     }
+    setTimeout(changeFn, 500) // 如果没有 dom 改变, 那也执行, 在 500 毫秒(等待样式展示)之后
     $opblock.on(domChange, debounce(changeFn, 100))
   })
 
