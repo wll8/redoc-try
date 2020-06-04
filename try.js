@@ -69,29 +69,44 @@ function getAbsolutePosition(domObj) { // 获取元素位置及大小
   return { width: w, height: h, top: t, left: l, right: r, bottom: b };
 }
 
-function initTry (cfg) {
+function initTry (userCfg) {
   seriesLoadScriptsCss([
-    `https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`,
-    `https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`,
-    `https://unpkg.com/swagger-ui-dist@3.25.1/swagger-ui-bundle.js`,
+    `cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`,
+    `cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`,
+    `unpkg.com/swagger-ui-dist@3.25.1/swagger-ui-bundle.js`,
   ], () => {
-    initTryOk({
-      // https://petstore.swagger.io/v2/swagger.json
-      openApi: `https://httpbin.org/spec.json`,
-      ...cfg,
-    })
+    const cfg = {
+      // petstore.swagger.io/v2/swagger.json
+      openApi: `httpbin.org/spec.json`,
+      ...userCfg,
+    }
+    if(cfg.onlySwagger) {
+      initSwagger(cfg)
+    } else {
+      initTryOk(cfg)
+    }
   })
 }
 
-function initTryOk (cfg) {
+function initSwagger(cfg) {
   // dom
   $('body').append(`
-    <div class="swaggerBox hide">
+    <div class="swaggerBox">
       <div id="swagger-ui"></div>
     </div>
   `)
   // swagger-ui.css
-  $('head').append('<link href="https://unpkg.com/swagger-ui-dist@3.25.1/swagger-ui.css" rel="stylesheet" type="text/css" />')
+  $('head').append('<link href="unpkg.com/swagger-ui-dist@3.25.1/swagger-ui.css" rel="stylesheet" type="text/css" />')
+  SwaggerUIBundle({
+    url: cfg.openApi,
+    dom_id: '#swagger-ui',
+    onComplete: () => {
+      trySwagger(cfg)
+    }
+  })
+}
+
+function initTryOk (cfg) {
   // reset swagger-ui css
   $('head').append(`
     <style>
@@ -137,13 +152,8 @@ function initTryOk (cfg) {
     enableConsole: true,
     // scrollYOffset: 50
   }, document.getElementById('redoc-container'), () => {
-    const ui = SwaggerUIBundle({
-      url: openApi,
-      dom_id: '#swagger-ui',
-      onComplete: () => {
-        trySwagger(cfg)
-      }
-    })
+    initSwagger(cfg)
+    $(`.swaggerBox`).addClass(`hide`)
   })
 }
 
