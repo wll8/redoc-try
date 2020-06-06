@@ -86,9 +86,15 @@ function initTryOk (cfg) {
       body .swagger-ui .wrapper {
         padding: 0;
       }
+      /* 禁用 api 条, 以免产生问题 */
       body .swagger-ui .opblock.opblock-get .opblock-summary {
         cursor: not-allowed;
         pointer-events: none;
+      }
+      /* 禁用 api 条, 但是排除授权按钮 */
+      body .swagger-ui .authorization__btn {
+        cursor: initial;
+        pointer-events: initial;
       }
       /* 以 body 为相对元素, 设置 swaggerBox 的位置 */
       body {
@@ -143,6 +149,31 @@ function trySwagger(cfg) {
     tryText: `try`, // 尝试按钮的文本
     trySwaggerInApi: true, // 是否把 swagger 调试窗口显示在 api 下面? true: 是, false: 显示在 Request 后面, 当 Request 比较大时可能看不到调试窗口了
     ...cfg,
+  }
+
+  { // 向 redoc 添加设置 auth 的按钮
+    $(`.sc-htoDjs.sc-fYxtnH.dTJWQH`).after($(`
+      <div class="sc-tilXH jIdpVJ btn setAuth">AUTHORIZE</div>
+    `))
+    $(`.btn.setAuth`).click(() => {
+      const $swaggerBox = $(`.swaggerBox`)
+        .removeClass(`hide`)
+        .css({
+          visibility: `hidden`,
+          height: ``,
+          left: ``,
+          top: ``,
+          width: ``,
+        })
+      $swaggerBox.removeClass(`hide`).css({visibility: `hidden`}) // 可以显示 swaggerBox 中的弹窗, 但是隐藏 swaggerBox 本身
+      $(`.swagger-ui .auth-wrapper .authorize.unlocked`).click() // 打开设置 auth 的弹窗
+      const $modal = $(`.swagger-ui .dialog-ux .modal-ux`)
+      $modal.css({visibility: `visible`})
+      $(`.swagger-ui .auth-btn-wrapper .btn-done, .swagger-ui .dialog-ux .modal-ux-header .close-modal`).click(() => {
+        $swaggerBox.addClass(`hide`).css({visibility: ``})
+        $modal.css({visibility: ``})
+      });
+    })
   }
 
   // 添加尝试按钮
