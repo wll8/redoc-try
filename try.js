@@ -156,6 +156,7 @@ function trySwagger(cfg) {
       <div class="sc-tilXH jIdpVJ btn setAuth">AUTHORIZE</div>
     `))
     $(`.btn.setAuth`).click(() => {
+      // 可以显示 swaggerBox 中的弹窗, 但是隐藏 swaggerBox 本身
       const $swaggerBox = $(`.swaggerBox`)
         .removeClass(`hide`)
         .css({
@@ -165,7 +166,6 @@ function trySwagger(cfg) {
           top: ``,
           width: ``,
         })
-      $swaggerBox.removeClass(`hide`).css({visibility: `hidden`}) // 可以显示 swaggerBox 中的弹窗, 但是隐藏 swaggerBox 本身
       $(`.swagger-ui .auth-wrapper .authorize.unlocked`).click() // 打开设置 auth 的弹窗
       const $modal = $(`.swagger-ui .dialog-ux .modal-ux`)
       $modal.css({visibility: `visible`})
