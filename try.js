@@ -15,34 +15,6 @@ function seriesLoadScriptsCss(scripts, callback) {
   };
   recursiveLoad(0);
 }
-function loadSource(arr) {
-  var i = 0, len = arr.length, fragment = document.createDocumentFragment();
-  for (; i < len; i++) {
-    var ext = arr[i].match(/\.[^\.]+$/)[0];
-    switch (ext) {
-      case ".css":
-        var link;
-        if (typeof link == 'undefined') {
-          link = document.createElement("link");
-          link.rel = "stylesheet";
-          link.type = "text/css";
-        }
-        link.href = arr[i];
-        fragment.appendChild(link);
-        break;
-      default:
-        var script;
-        if (typeof script == "undefined") {
-          script = document.createElement("script");
-          script.type = "text/javascript";
-        }
-        script.src = arr[i];
-        fragment.appendChild(script);
-        break;
-    }
-  }
-  document.getElementsByTagName("head")[0].appendChild(fragment);
-}
 function debounce(fn, wait) { // 防抖
   var timer = null;
   return function () {
