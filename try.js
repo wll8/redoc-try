@@ -43,13 +43,13 @@ function getAbsolutePosition(domObj) { // 获取元素位置及大小
 
 function initTry (userCfg) {
   seriesLoadScriptsCss([
-    `cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`,
-    `cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`,
-    `unpkg.com/swagger-ui-dist@3.25.1/swagger-ui-bundle.js`,
+    `//cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`,
+    `//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`,
+    `//unpkg.com/swagger-ui-dist@3.25.1/swagger-ui-bundle.js`,
   ], () => {
     const cfg = {
       // petstore.swagger.io/v2/swagger.json
-      openApi: `httpbin.org/spec.json`,
+      openApi: `//httpbin.org/spec.json`,
       ...userCfg,
     }
     if(cfg.onlySwagger) {
@@ -68,7 +68,7 @@ function initSwagger(cfg) {
     </div>
   `)
   // swagger-ui.css
-  $('head').append('<link href="unpkg.com/swagger-ui-dist@3.25.1/swagger-ui.css" rel="stylesheet" type="text/css" />')
+  $('head').append('<link href="//unpkg.com/swagger-ui-dist@3.25.1/swagger-ui.css" rel="stylesheet" type="text/css" />')
   SwaggerUIBundle({
     url: cfg.openApi,
     dom_id: '#swagger-ui',
