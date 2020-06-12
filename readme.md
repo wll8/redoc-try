@@ -18,6 +18,8 @@ Add `Try it out` function like [swagger](https://petstore.swagger.io/) on [redoc
       // onlySwagger: true,
       // tryText: `try`, // Try button text
       // trySwaggerInApi: true, // Whether to display swagger debugging window under api?
+      // redocOptions: {enableConsole: true},
+      // swaggerOptions: {dom_id: `#swagger-ui`},
     })
   </script>
 </body>
