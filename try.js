@@ -38,6 +38,62 @@ function initTry (userCfg) {
   })
 }
 
+function initCss() {
+  // reset swagger-ui css
+  $('head').append(`
+    <style>
+      /* 重置 swagger-ui 的样式 */
+      body .swagger-ui .wrapper {
+        padding: 0;
+      }
+      /* 禁用 api 条, 以免产生问题 */
+      body .swagger-ui .opblock .opblock-summary {
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+      /* 禁用 api 条, 但是排除授权按钮 */
+      body .swagger-ui .authorization__btn {
+        cursor: initial;
+        pointer-events: initial;
+      }
+      /* 以 body 为相对元素, 设置 swaggerBox 的位置 */
+      body {
+        position: relative;
+      }
+      @media print, screen and (max-width: 85rem) {
+        .dtUibw {
+          padding: 4px;
+        }
+      }
+      .swaggerBox {
+        border-radius: 4px;
+        background-color: #fff;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+      }
+      .hide {
+        visibility: hidden;
+        cursor: none;
+        width: 0;
+        height: 0;
+      }
+      .show {
+        visibility: visible;
+        cursor: initial;
+      }
+      .tryBtn {
+        margin-right: 10px;
+        background-color: #fff;
+      }
+    </style>
+  `)
+}
+
 function initSwagger(swaggerOptions) {
   // dom
   $('body').append(`
@@ -47,11 +103,11 @@ function initSwagger(swaggerOptions) {
   `)
   // swagger-ui.css
   $('head').append(`<link rel="stylesheet" href="//unpkg.com/swagger-ui-dist@3.25.1/swagger-ui.css" />`)
-  $('head').append(`<link rel="stylesheet" href="./style.css" />`)
   SwaggerUIBundle(swaggerOptions)
 }
 
 function trySwagger(cfg) {
+  initCss()
   { // 向 redoc 添加设置 auth 的按钮
     $(`.sc-htoDjs.sc-fYxtnH.dTJWQH`).after($(`
       <div class="sc-tilXH jIdpVJ btn setAuth">AUTHORIZE</div>
@@ -154,7 +210,17 @@ function trySwagger(cfg) {
     console.log(`selStr`, selStr)
     $(`.swaggerBox`).scrollTo($swaggerApiDom.parent())
     // 一些 dom 改变事件, 当用户操作 swagger api, 例如点击 `try it out` 的时候, 重新获取高度, 并同步到 swaggerBox 和 swaggerShadow
-    const domChange = `DOMAttrModified DOMAttributeNameChanged DOMCharacterDataModified DOMElementNameChanged DOMNodeInserted DOMNodeInsertedIntoDocument DOMNodeRemoved DOMNodeRemovedFromDocument DOMSubtreeModified`
+    const domChange = [
+      `DOMAttrModified`,
+      `DOMAttributeNameChanged`,
+      `DOMCharacterDataModified`,
+      `DOMElementNameChanged`,
+      `DOMNodeInserted`,
+      `DOMNodeInsertedIntoDocument`,
+      `DOMNodeRemoved`,
+      `DOMNodeRemovedFromDocument`,
+      `DOMSubtreeModified`
+    ].join(` `)
     $('.opblock').off(domChange) // 监听前先取消所有类似元素的监听, 避免多于的监听造成卡顿
     function changeFn() {
       const pos = getAbsolutePosition($opblock[0])
