@@ -1,4 +1,6 @@
 ## redoc try
+[👉 online preview](https://wll8.github.io/redoc-try/index.html)
+
 Add `Try it out` function like [swagger](https://petstore.swagger.io/) on [redoc](https://github.com/Redocly/redoc).
 
 ![re-doc try](https://github.com/wll8/redoc-try/raw/master/redoc_WX20200518-152825.png)
@@ -36,7 +38,7 @@ initTry({
 
 ## Why do you need it?
 
-According to the description of [#53]((https://github.com/Redocly/redoc/issues/53) ), the try function is no longer developed, maybe it has become a paid function.
+According to the description of [#53](https://github.com/Redocly/redoc/issues/53), the try function is no longer developed, maybe it has become a paid function.
 
 If you need to simply have this feature, you don't need to redevelop it, because it will consume a lot of time and lack community maintenance.
 
