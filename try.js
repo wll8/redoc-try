@@ -1,4 +1,7 @@
 function initTry (userCfg) {
+  if (typeof(userCfg) === `string`) {
+    userCfg = {openApi: userCfg}
+  }
   seriesLoadScriptsCss([
     `//cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`,
     `//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`,
