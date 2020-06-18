@@ -11,9 +11,9 @@ function initTry (userCfg) {
     const [redoc_openApi, redoc_options, redoc_dom, redoc_callBack] = userCfg.redocOptions || []
     const cfg = {
       openApi: testOpenApi,
-      onlySwagger: false, // 仅渲染 swagger, 某些情况下 redoc 会渲染 openApi 错误
-      tryText: `try`, // 尝试按钮的文本
-      trySwaggerInApi: true, // 是否把 swagger 调试窗口显示在 api 下面? true: 是, false: 显示在 Request 后面, 当 Request 比较大时可能看不到调试窗口了
+      onlySwagger: false, // Only render swagger, in some cases redoc will render openApi error
+      tryText: `try`, // try button text 
+      trySwaggerInApi: true, // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window 
       redocOptions: [
         redoc_openApi || userCfg.openApi || testOpenApi,
         redoc_options || {enableConsole: true},
@@ -45,21 +45,21 @@ function initCss() {
   // reset swagger-ui css
   $('head').append(`
     <style>
-      /* 重置 swagger-ui 的样式 */
+      /* Reset the style of swagger-ui */
       body .swagger-ui .wrapper {
         padding: 0;
       }
-      /* 禁用 api 条, 以免产生问题 */
+      /* Disable api bar to avoid problems */
       body .swagger-ui .opblock .opblock-summary {
         cursor: not-allowed;
         pointer-events: none;
       }
-      /* 禁用 api 条, 但是排除授权按钮 */
+      /* Disable the api bar, but exclude the authorization button */
       body .swagger-ui .authorization__btn {
         cursor: initial;
         pointer-events: initial;
       }
-      /* 以 body 为相对元素, 设置 swaggerBox 的位置 */
+      /* Set the position of swaggerBox with body as the relative element */
       body {
         position: relative;
       }
@@ -111,12 +111,12 @@ function initSwagger(swaggerOptions) {
 
 function trySwagger(cfg) {
   initCss()
-  { // 向 redoc 添加设置 auth 的按钮
+  { // dd a button to set auth to redoc
     $(`.sc-htoDjs.sc-fYxtnH.dTJWQH`).after($(`
       <div class="sc-tilXH jIdpVJ btn setAuth">AUTHORIZE</div>
     `))
     $(`.btn.setAuth`).click(() => {
-      // 可以显示 swaggerBox 中的弹窗, 但是隐藏 swaggerBox 本身
+      // The pop-up window in swaggerBox can be displayed, but the swaggerBox itself is hidden
       const $swaggerBox = $(`.swaggerBox`)
         .removeClass(`hide`)
         .css({
@@ -126,7 +126,7 @@ function trySwagger(cfg) {
           top: ``,
           width: ``,
         })
-      $(`.swagger-ui .auth-wrapper .authorize.unlocked`).click() // 打开设置 auth 的弹窗
+      $(`.swagger-ui .auth-wrapper .authorize.unlocked`).click() // Open the pop-up window for setting auth
       const $modal = $(`.swagger-ui .dialog-ux .modal-ux`)
       $modal.css({visibility: `visible`})
       $(`.swagger-ui .auth-btn-wrapper .btn-done, .swagger-ui .dialog-ux .modal-ux-header .close-modal`).click(() => {
@@ -136,29 +136,29 @@ function trySwagger(cfg) {
     })
   }
 
-  // 添加尝试按钮
+  // Add try button 
   $(`.http-verb`).before(`
     <button class="tryBtn">${cfg.tryText}</button>
   `)
   $(`.tryBtn`).click(function (event) {
     event.stopPropagation()
     const $tryBtn = $(this)
-    $(`.swaggerShadow`).remove() // 先清除所有临时元素
-    const $operation = $tryBtn.parents(`[data-section-id]`) // 获取最外层 api box
-    if ($operation.hasClass(`try`) === true) { // 如果当前 api 已经是 try 状态, 则卸载并退出函数
+    $(`.swaggerShadow`).remove() // First clear all temporary elements
+    const $operation = $tryBtn.parents(`[data-section-id]`) // Get the outermost api box 
+    if ($operation.hasClass(`try`) === true) { // If the current API is already in the try state, uninstall and exit the function
       $(`.swaggerBox`).addClass(`hide`).removeClass(`show`)
       $operation.removeClass(`try`)
       return false
     }
-    $(`[data-section-id]`).removeClass(`try`) // 删除其他所有 api 的 try 类名
-    $operation.addClass(`try`) // 给当前点击的 api 添加 try 类名
+    $(`[data-section-id]`).removeClass(`try`) // Delete the try class name of all other APIs
+    $operation.addClass(`try`) // Add try class name to the currently clicked api
 
-    // 以下 3 行给一些必要元素添加类名, 以方便获取或识别
+    // The following 3 lines add class names to some necessary elements to facilitate acquisition or identification
     $(`.try>div>div:nth-child(2)`).addClass(`apiBlock`)
     $(`.try .apiBlock>div:nth-child(1)`).addClass(`fullApiBox`)
     $(`.try .apiBlock>div>div:nth-child(1)`).addClass(`fullApi`)
-    const appendSwaggerShadow = () => $(`.try .fullApiBox`).append(`<div class="swaggerShadow"></div>`) // 添加一个 swaggerShadow 元素来同步 swagger 的高度, 用来占位
-    // 如果 cfg.trySwaggerInApi === true 则 swaggerShadow 会被添加到 fullApi 下面, 否则可能会在 reqBox 下面
+    const appendSwaggerShadow = () => $(`.try .fullApiBox`).append(`<div class="swaggerShadow"></div>`) //Add a swaggerShadow element to synchronize the height of swagger and use it to occupy space
+    //If cfg.trySwaggerInApi === true then swaggerShadow will be added under fullApi, otherwise it may be under reqBox 
     if (cfg.trySwaggerInApi === true) {
       appendSwaggerShadow()
     } else {
@@ -171,14 +171,14 @@ function trySwagger(cfg) {
       }
     }
 
-    // 获取点击的 method 和 api
+    // get the click method and api
     const fullApi = $(`.try .fullApi`).text().replace(cfg.tryText, '').trim()
     const [, method, api] = fullApi.match(/(\w+)(.*)/)
 
-    // 获取 swaggerShadow 的位置
+    // Get the position of swaggerShadow
     let pos = {}
     pos = getAbsolutePosition($(`.try .swaggerShadow`)[0])
-    pos = Object.keys(pos).reduce((prev, cur, index) => { // 给没有单位的数字添加 px, 数字为 0 时为 undefined
+    pos = Object.keys(pos).reduce((prev, cur, index) => { // Add px to the number without unit, undefined when the number is 0
       const val = pos[cur]
       return {
         ...prev,
@@ -188,7 +188,7 @@ function trySwagger(cfg) {
 
     let oldHeight = pos.height ? `${pos.height}` : undefined
 
-    // 移动 swagger 到 swaggerShadow 的位置
+    // Move swagger to the position of swaggerShadow
     const getSwaggerBoxHeight = () => getAbsolutePosition($(`.swaggerBox`)[0]).height + `px`
     $(`.swaggerBox`).css({
       left: `${pos.left}`,
@@ -197,22 +197,22 @@ function trySwagger(cfg) {
       height: oldHeight,
     }).removeClass(`hide`).addClass('show')
 
-    // 同步 swaggerShadow 的大小, 让它与 swaggerBox 一样大
+    // Synchronize the size of swaggerShadow to make it as big as swaggerBox
     $(`.swaggerShadow`).css({
       height: getSwaggerBoxHeight()
     })
 
-    // 滚动 swagger 视图到相同的 api 位置
+    // scroll the swagger view to the same api position
     const selStr = `.opblock-summary-${method} [data-path="${api}"]`
     const $swaggerApiDom = $(selStr)
-    const $opblock = $swaggerApiDom.parents(`.opblock`) // 获取当前点击的 swagger api, 并且不是展开状态的元素
+    const $opblock = $swaggerApiDom.parents(`.opblock`) // Get the currently clicked swagger api, and it is not an expanded element
     if ($opblock.hasClass(`open`) === false) {
-      $swaggerApiDom.click() // 打开
+      $swaggerApiDom.click() // turn on 
     }
     $opblock.addClass(`open`)
     console.log(`selStr`, selStr)
     $(`.swaggerBox`).scrollTo($swaggerApiDom.parent())
-    // 一些 dom 改变事件, 当用户操作 swagger api, 例如点击 `try it out` 的时候, 重新获取高度, 并同步到 swaggerBox 和 swaggerShadow
+    // Some dom change events, when the user operates the swagger api, such as clicking `try it out`, the height is re-acquired and synchronized to swaggerBox and swaggerShadow
     const domChange = [
       `DOMAttrModified`,
       `DOMAttributeNameChanged`,
@@ -224,11 +224,11 @@ function trySwagger(cfg) {
       `DOMNodeRemovedFromDocument`,
       `DOMSubtreeModified`
     ].join(` `)
-    $('.opblock').off(domChange) // 监听前先取消所有类似元素的监听, 避免多于的监听造成卡顿
+    $('.opblock').off(domChange) // Cancel the monitoring of all similar elements before monitoring, to avoid more than the monitoring causing jams
     function changeFn() {
       const pos = getAbsolutePosition($opblock[0])
       if (pos.height === 0) {
-        return false; // 高度为 0 则不进行处理
+        return false; // The height is 0, no processing
       } else {
         let newHeight = `${pos.height}px`
         if (oldHeight !== newHeight) {
@@ -243,11 +243,11 @@ function trySwagger(cfg) {
         }
       }
     }
-    setTimeout(changeFn, 500) // 如果没有 dom 改变, 那也执行, 在 500 毫秒(等待样式展示)之后
+    setTimeout(changeFn, 500) // If there is no dom change, it is also executed, after 500 milliseconds (waiting for style display)
     $opblock.on(domChange, debounce(changeFn, 100))
   })
 
-  // 当改变浏览器窗口大小时, 重置 swaggerBox 的状态
+  // When changing the browser window size, reset the state of swaggerBox
   $(window).resize(debounce(() => {
     $(`.swaggerBox`).addClass(`hide`).removeClass(`show`).css({ left: 0, top: 0 })
     $(`[data-section-id^="operation/"]`).removeClass(`try`)
@@ -257,7 +257,7 @@ function trySwagger(cfg) {
 function seriesLoadScriptsCss(scripts, callback) {
   if (typeof (scripts) != "object") var scripts = [scripts];
   var HEAD = document.getElementsByTagName("head").item(0) || document.documentElement;
-  var s = new Array(), last = scripts.length - 1, recursiveLoad = function (i) { //递归
+  var s = new Array(), last = scripts.length - 1, recursiveLoad = function (i) { //Recursive
     s[i] = document.createElement("script");
     s[i].setAttribute("type", "text/javascript");
     s[i].onload = s[i].onreadystatechange = function () { //Attach handlers for all browsers
@@ -272,7 +272,7 @@ function seriesLoadScriptsCss(scripts, callback) {
   recursiveLoad(0);
 }
 
-function debounce(fn, wait) { // 防抖
+function debounce(fn, wait) { // anti-shake
   var timer = null;
   return function () {
     if (timer !== null) {
@@ -282,11 +282,11 @@ function debounce(fn, wait) { // 防抖
   }
 }
 
-function getAbsolutePosition(domObj) { // 获取元素位置及大小
-  // 如果函数没有传入值的话返回对象为空的
+function getAbsolutePosition(domObj) { // Get element position and size
+  // If the function has no value, the return object is empty
   if (!domObj) return null;
   var w = domObj.offsetWidth, h = domObj.offsetHeight;
-  // 从目标元素开始向外遍历，累加top和left值
+  // Start traversing outward from the target element, accumulate top and left values
   var t, l;
   for (t = domObj.offsetTop, l = domObj.offsetLeft; domObj = domObj.offsetParent;) {
     t += domObj.offsetTop;
@@ -295,6 +295,6 @@ function getAbsolutePosition(domObj) { // 获取元素位置及大小
   var r = document.body.offsetWidth - w - l;
   var b = document.body.offsetHeight - h - t;
 
-  // 返回定位元素的坐标集合
+  // Returns the coordinate set of positioned elements
   return { width: w, height: h, top: t, left: l, right: r, bottom: b };
 }
