@@ -111,7 +111,7 @@ function initSwagger(swaggerOptions) {
 
 function trySwagger(cfg) {
   initCss()
-  { // dd a button to set auth to redoc
+  { // Add a button to set auth to redoc
     $(`.sc-htoDjs.sc-fYxtnH.dTJWQH`).after($(`
       <div class="sc-tilXH jIdpVJ btn setAuth">AUTHORIZE</div>
     `))
