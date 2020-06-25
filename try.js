@@ -2,43 +2,46 @@ function initTry(userCfg) {
   if (typeof (userCfg) === `string`) {
     userCfg = { openApi: userCfg }
   }
-  seriesLoadScriptsCss([
-    `//cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`,
-    `//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`,
-    `//unpkg.com/swagger-ui-dist@3.25.1/swagger-ui-bundle.js`,
-  ], () => {
-    const testOpenApi = `//httpbin.org/spec.json` // `//petstore.swagger.io/v2/swagger.json`
-    const [redoc_openApi, redoc_options, redoc_dom, redoc_callBack] = userCfg.redocOptions || []
-    const cfg = {
-      openApi: testOpenApi,
-      onlySwagger: false, // Only render swagger, in some cases redoc will render openApi error
-      tryText: `try`, // try button text
-      trySwaggerInApi: true, // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window
-      redocOptions: [
-        redoc_openApi || userCfg.openApi || testOpenApi,
-        redoc_options || { enableConsole: true },
-        redoc_dom || document.getElementById('redoc-container'),
-        redoc_callBack || function () {
-          initSwagger(cfg.swaggerOptions)
-          $(`.swaggerBox`).addClass(`hide`)
+
+  loadScript(`//cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`)
+    .then(() => loadScript(`//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`))
+    .then(() => loadScript(`//unpkg.com/swagger-ui-dist@3.25.1/swagger-ui-bundle.js`))
+    .then(() => {
+      const testOpenApi = `//httpbin.org/spec.json` // `//petstore.swagger.io/v2/swagger.json`
+      const [redoc_openApi, redoc_options, redoc_dom, redoc_callBack] = userCfg.redocOptions || []
+      const cfg = {
+        openApi: testOpenApi,
+        onlySwagger: false, // Only render swagger, in some cases redoc will render openApi error
+        tryText: `try`, // try button text
+        trySwaggerInApi: true, // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window
+        redocOptions: [
+          redoc_openApi || userCfg.openApi || testOpenApi,
+          redoc_options || { enableConsole: true },
+          redoc_dom || document.getElementById('redoc-container'),
+          redoc_callBack || function () {
+            initSwagger(cfg.swaggerOptions)
+            $(`.swaggerBox`).addClass(`hide`)
+          },
+        ],
+        swaggerOptions: {
+          url: userCfg.openApi || testOpenApi,
+          dom_id: `#swagger-ui`,
+          onComplete: () => {
+            trySwagger(cfg)
+          },
+          ...userCfg.swaggerOptions
         },
-      ],
-      swaggerOptions: {
-        url: userCfg.openApi || testOpenApi,
-        dom_id: `#swagger-ui`,
-        onComplete: () => {
-          trySwagger(cfg)
-        },
-        ...userCfg.swaggerOptions
-      },
-      ...userCfg,
-    }
-    if (cfg.onlySwagger) {
-      initSwagger(cfg.swaggerOptions)
-    } else {
-      Redoc.init(...cfg.redocOptions)
-    }
-  })
+        ...userCfg,
+      }
+      if (cfg.onlySwagger) {
+        initSwagger(cfg.swaggerOptions)
+      } else {
+        Redoc.init(...cfg.redocOptions)
+      }
+    })
+    .catch(() => {
+      console.error('Something went wrong.')
+    })
 }
 
 function initCss() {
@@ -254,22 +257,15 @@ function trySwagger(cfg) {
   }, 500))
 }
 
-function seriesLoadScriptsCss(scripts, callback) {
-  if (typeof (scripts) != "object") var scripts = [scripts];
-  var HEAD = document.getElementsByTagName("head").item(0) || document.documentElement;
-  var s = new Array(), last = scripts.length - 1, recursiveLoad = function (i) { // Recursive
-    s[i] = document.createElement("script");
-    s[i].setAttribute("type", "text/javascript");
-    s[i].onload = s[i].onreadystatechange = function () { // Attach handlers for all browsers
-      if (!/*@cc_on!@*/0 || this.readyState == "loaded" || this.readyState == "complete") {
-        this.onload = this.onreadystatechange = null; this.parentNode.removeChild(this);
-        if (i != last) recursiveLoad(i + 1); else if (typeof (callback) == "function") callback();
-      }
-    }
-    s[i].setAttribute("src", scripts[i]);
-    HEAD.appendChild(s[i]);
-  };
-  recursiveLoad(0);
+const loadScript = src => {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script')
+    script.type = 'text/javascript'
+    script.onload = resolve
+    script.onerror = reject
+    script.src = src
+    document.head.append(script)
+  })
 }
 
 function debounce(fn, wait) { // anti-shake
