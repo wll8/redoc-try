@@ -12,8 +12,8 @@ function initTry (userCfg) {
     const cfg = {
       openApi: testOpenApi,
       onlySwagger: false, // Only render swagger, in some cases redoc will render openApi error
-      tryText: `try`, // try button text 
-      trySwaggerInApi: true, // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window 
+      tryText: `try`, // try button text
+      trySwaggerInApi: true, // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window
       redocOptions: [
         redoc_openApi || userCfg.openApi || testOpenApi,
         redoc_options || {enableConsole: true},
@@ -136,7 +136,7 @@ function trySwagger(cfg) {
     })
   }
 
-  // Add try button 
+  // Add try button
   $(`.http-verb`).before(`
     <button class="tryBtn">${cfg.tryText}</button>
   `)
@@ -144,7 +144,7 @@ function trySwagger(cfg) {
     event.stopPropagation()
     const $tryBtn = $(this)
     $(`.swaggerShadow`).remove() // First clear all temporary elements
-    const $operation = $tryBtn.parents(`[data-section-id]`) // Get the outermost api box 
+    const $operation = $tryBtn.parents(`[data-section-id]`) // Get the outermost api box
     if ($operation.hasClass(`try`) === true) { // If the current API is already in the try state, uninstall and exit the function
       $(`.swaggerBox`).addClass(`hide`).removeClass(`show`)
       $operation.removeClass(`try`)
@@ -158,7 +158,7 @@ function trySwagger(cfg) {
     $(`.try .apiBlock>div:nth-child(1)`).addClass(`fullApiBox`)
     $(`.try .apiBlock>div>div:nth-child(1)`).addClass(`fullApi`)
     const appendSwaggerShadow = () => $(`.try .fullApiBox`).append(`<div class="swaggerShadow"></div>`) //Add a swaggerShadow element to synchronize the height of swagger and use it to occupy space
-    //If cfg.trySwaggerInApi === true then swaggerShadow will be added under fullApi, otherwise it may be under reqBox 
+    //If cfg.trySwaggerInApi === true then swaggerShadow will be added under fullApi, otherwise it may be under reqBox
     if (cfg.trySwaggerInApi === true) {
       appendSwaggerShadow()
     } else {
@@ -207,7 +207,7 @@ function trySwagger(cfg) {
     const $swaggerApiDom = $(selStr)
     const $opblock = $swaggerApiDom.parents(`.opblock`) // Get the currently clicked swagger api, and it is not an expanded element
     if ($opblock.hasClass(`open`) === false) {
-      $swaggerApiDom.click() // turn on 
+      $swaggerApiDom.click() // turn on
     }
     $opblock.addClass(`open`)
     console.log(`selStr`, selStr)
