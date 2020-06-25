@@ -3,7 +3,7 @@
 
 Add `Try it out` function like [swagger](https://petstore.swagger.io/) on [redoc](https://github.com/Redocly/redoc).
 
-![re-doc try](https://github.com/wll8/redoc-try/raw/master/redoc_WX20200518-152825.png)
+![re-doc try](https://github.com/wll8/redoc-try/raw/master/redoc_show.png)
 
 ## how to use?
 
