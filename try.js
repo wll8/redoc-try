@@ -1,39 +1,10 @@
 function initTry(userCfg) {
-  if (typeof (userCfg) === `string`) {
-    userCfg = { openApi: userCfg }
-  }
-
   loadScript(`//cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`)
     .then(() => loadScript(`//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`))
     .then(() => loadScript(`//unpkg.com/swagger-ui-dist@3.25.1/swagger-ui-bundle.js`))
     .then(() => {
-      const testOpenApi = `//httpbin.org/spec.json` // `//petstore.swagger.io/v2/swagger.json`
-      const [redoc_openApi, redoc_options, redoc_dom, redoc_callBack] = userCfg.redocOptions || []
-      const cfg = {
-        openApi: testOpenApi,
-        onlySwagger: false, // Only render swagger, in some cases redoc will render openApi error
-        tryText: `try`, // try button text
-        trySwaggerInApi: true, // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window
-        redocOptions: [
-          redoc_openApi || userCfg.openApi || testOpenApi,
-          redoc_options || { enableConsole: true },
-          redoc_dom || document.getElementById('redoc-container'),
-          redoc_callBack || function () {
-            initSwagger(cfg.swaggerOptions)
-            $(`.swaggerBox`).addClass(`hide`)
-          },
-        ],
-        swaggerOptions: {
-          url: userCfg.openApi || testOpenApi,
-          dom_id: `#swagger-ui`,
-          onComplete: () => {
-            trySwagger(cfg)
-          },
-          ...userCfg.swaggerOptions
-        },
-        ...userCfg,
-      }
-      if (cfg.onlySwagger) {
+      const cfg = cfgHandle(userCfg)
+      if(cfg.onlySwagger) {
         initSwagger(cfg.swaggerOptions)
       } else {
         Redoc.init(...cfg.redocOptions)
@@ -42,6 +13,39 @@ function initTry(userCfg) {
     .catch(() => {
       console.error('Something went wrong.')
     })
+}
+
+function cfgHandle(userCfg) {
+  if (typeof (userCfg) === `string`) {
+    userCfg = { openApi: userCfg }
+  }
+  const testOpenApi = `//httpbin.org/spec.json` // `//petstore.swagger.io/v2/swagger.json`
+  const [redoc_openApi, redoc_options, redoc_dom, redoc_callBack] = userCfg.redocOptions || []
+  const cfg = {
+    openApi: testOpenApi,
+    onlySwagger: false, // Only render swagger, in some cases redoc will render openApi error
+    tryText: `try`, // try button text
+    trySwaggerInApi: true, // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window
+    redocOptions: [
+      redoc_openApi || userCfg.openApi || testOpenApi,
+      redoc_options || {enableConsole: true},
+      redoc_dom || document.getElementById('redoc-container'),
+      redoc_callBack || function () {
+        initSwagger(cfg.swaggerOptions)
+        $(`.swaggerBox`).addClass(`hide`)
+      },
+    ],
+    swaggerOptions: {
+      url: userCfg.openApi || testOpenApi,
+      dom_id: `#swagger-ui`,
+      onComplete: () => {
+        trySwagger(cfg)
+      },
+      ...userCfg.swaggerOptions
+    },
+    ...userCfg,
+  }
+  return cfg
 }
 
 function initCss() {
