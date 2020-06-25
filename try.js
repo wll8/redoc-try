@@ -157,8 +157,8 @@ function trySwagger(cfg) {
     $(`.try>div>div:nth-child(2)`).addClass(`apiBlock`)
     $(`.try .apiBlock>div:nth-child(1)`).addClass(`fullApiBox`)
     $(`.try .apiBlock>div>div:nth-child(1)`).addClass(`fullApi`)
-    const appendSwaggerShadow = () => $(`.try .fullApiBox`).append(`<div class="swaggerShadow"></div>`) //Add a swaggerShadow element to synchronize the height of swagger and use it to occupy space
-    //If cfg.trySwaggerInApi === true then swaggerShadow will be added under fullApi, otherwise it may be under reqBox
+    const appendSwaggerShadow = () => $(`.try .fullApiBox`).append(`<div class="swaggerShadow"></div>`) // Add a swaggerShadow element to synchronize the height of swagger and use it to occupy space
+    // If cfg.trySwaggerInApi === true then swaggerShadow will be added under fullApi, otherwise it may be under reqBox
     if (cfg.trySwaggerInApi === true) {
       appendSwaggerShadow()
     } else {
@@ -257,10 +257,10 @@ function trySwagger(cfg) {
 function seriesLoadScriptsCss(scripts, callback) {
   if (typeof (scripts) != "object") var scripts = [scripts];
   var HEAD = document.getElementsByTagName("head").item(0) || document.documentElement;
-  var s = new Array(), last = scripts.length - 1, recursiveLoad = function (i) { //Recursive
+  var s = new Array(), last = scripts.length - 1, recursiveLoad = function (i) { // Recursive
     s[i] = document.createElement("script");
     s[i].setAttribute("type", "text/javascript");
-    s[i].onload = s[i].onreadystatechange = function () { //Attach handlers for all browsers
+    s[i].onload = s[i].onreadystatechange = function () { // Attach handlers for all browsers
       if (!/*@cc_on!@*/0 || this.readyState == "loaded" || this.readyState == "complete") {
         this.onload = this.onreadystatechange = null; this.parentNode.removeChild(this);
         if (i != last) recursiveLoad(i + 1); else if (typeof (callback) == "function") callback();
