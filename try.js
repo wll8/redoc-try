@@ -273,28 +273,30 @@ const loadScript = src => {
 }
 
 function debounce(fn, wait) { // anti-shake
-  var timer = null;
+  let timer = null
   return function () {
     if (timer !== null) {
-      clearTimeout(timer);
+      clearTimeout(timer)
     }
-    timer = setTimeout(fn, wait);
+    timer = setTimeout(fn, wait)
   }
 }
 
 function getAbsolutePosition(domObj) { // Get element position and size
   // If the function has no value, the return object is empty
   if (!domObj) return null;
-  var w = domObj.offsetWidth, h = domObj.offsetHeight;
+  const width = domObj.offsetWidth
+  const height = domObj.offsetHeight
   // Start traversing outward from the target element, accumulate top and left values
-  var t, l;
-  for (t = domObj.offsetTop, l = domObj.offsetLeft; domObj = domObj.offsetParent;) {
-    t += domObj.offsetTop;
-    l += domObj.offsetLeft;
+  let top
+  let left
+  for (top = domObj.offsetTop, left = domObj.offsetLeft; domObj = domObj.offsetParent;) {
+    top += domObj.offsetTop
+    left += domObj.offsetLeft
   }
-  var r = document.body.offsetWidth - w - l;
-  var b = document.body.offsetHeight - h - t;
+  const right = document.body.offsetWidth - width - left
+  const bottom = document.body.offsetHeight - height - top
 
   // Returns the coordinate set of positioned elements
-  return { width: w, height: h, top: t, left: l, right: r, bottom: b };
+  return { width, height, top, left, right, bottom }
 }
