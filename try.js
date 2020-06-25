@@ -1,6 +1,6 @@
-function initTry (userCfg) {
-  if (typeof(userCfg) === `string`) {
-    userCfg = {openApi: userCfg}
+function initTry(userCfg) {
+  if (typeof (userCfg) === `string`) {
+    userCfg = { openApi: userCfg }
   }
   seriesLoadScriptsCss([
     `//cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`,
@@ -16,7 +16,7 @@ function initTry (userCfg) {
       trySwaggerInApi: true, // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window
       redocOptions: [
         redoc_openApi || userCfg.openApi || testOpenApi,
-        redoc_options || {enableConsole: true},
+        redoc_options || { enableConsole: true },
         redoc_dom || document.getElementById('redoc-container'),
         redoc_callBack || function () {
           initSwagger(cfg.swaggerOptions)
@@ -33,7 +33,7 @@ function initTry (userCfg) {
       },
       ...userCfg,
     }
-    if(cfg.onlySwagger) {
+    if (cfg.onlySwagger) {
       initSwagger(cfg.swaggerOptions)
     } else {
       Redoc.init(...cfg.redocOptions)
@@ -128,10 +128,10 @@ function trySwagger(cfg) {
         })
       $(`.swagger-ui .auth-wrapper .authorize.unlocked`).click() // Open the pop-up window for setting auth
       const $modal = $(`.swagger-ui .dialog-ux .modal-ux`)
-      $modal.css({visibility: `visible`})
+      $modal.css({ visibility: `visible` })
       $(`.swagger-ui .auth-btn-wrapper .btn-done, .swagger-ui .dialog-ux .modal-ux-header .close-modal`).click(() => {
-        $swaggerBox.addClass(`hide`).css({visibility: ``})
-        $modal.css({visibility: ``})
+        $swaggerBox.addClass(`hide`).css({ visibility: `` })
+        $modal.css({ visibility: `` })
       });
     })
   }
