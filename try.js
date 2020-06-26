@@ -19,13 +19,24 @@ function cfgHandle(userCfg) {
   if (typeof (userCfg) === `string`) {
     userCfg = { openApi: userCfg }
   }
+  const { redocOptions } = userCfg
   const testOpenApi = `//httpbin.org/spec.json` // `//petstore.swagger.io/v2/swagger.json`
-  const [redoc_openApi, redoc_options, redoc_dom, redoc_callBack] = userCfg.redocOptions || []
+  const redocOptionsRes = dataType(redocOptions, `object`) ? [undefined, redocOptions] : (redocOptions || [])
+  const [redoc_openApi, redoc_options, redoc_dom, redoc_callBack] = redocOptionsRes
   const cfg = {
     openApi: testOpenApi,
     onlySwagger: false, // Only render swagger, in some cases redoc will render openApi error
     tryText: `try`, // try button text
     trySwaggerInApi: true, // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window
+    ...userCfg,
+    swaggerOptions: {
+      url: userCfg.openApi || testOpenApi,
+      dom_id: `#swagger-ui`,
+      onComplete: () => {
+        trySwagger(cfg)
+      },
+      ...userCfg.swaggerOptions
+    },
     redocOptions: [
       redoc_openApi || userCfg.openApi || testOpenApi,
       redoc_options || {enableConsole: true},
@@ -35,15 +46,6 @@ function cfgHandle(userCfg) {
         $(`.swaggerBox`).addClass(`hide`)
       },
     ],
-    swaggerOptions: {
-      url: userCfg.openApi || testOpenApi,
-      dom_id: `#swagger-ui`,
-      onComplete: () => {
-        trySwagger(cfg)
-      },
-      ...userCfg.swaggerOptions
-    },
-    ...userCfg,
   }
   return cfg
 }
@@ -299,4 +301,9 @@ function getAbsolutePosition(domObj) { // Get element position and size
 
   // Returns the coordinate set of positioned elements
   return { width, height, top, left, right, bottom }
+}
+
+function dataType(data, type) {
+  const dataType = Object.prototype.toString.call(data).match(/\s(.+)]/)[1].toLowerCase()
+  return type ? (dataType === type.toLowerCase()) : dataType
 }
