@@ -13,7 +13,7 @@ Add `Try it out` function like [swagger](https://petstore.swagger.io/) on [redoc
 <body>
   <div id="redoc-container"></div>
   <script src="//cdn.jsdelivr.net/npm/redoc@2.0.0-rc.28/bundles/redoc.standalone.min.js"> </script>
-  <script src="//cdn.jsdelivr.net/gh/wll8/redoc-try@1.2.0/try.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/wll8/redoc-try@1.3.1/dist/try.js"></script>
   <script>
     initTry(`https://petstore.swagger.io/v2/swagger.json`)
   </script>

@@ -263,7 +263,7 @@ function trySwagger(cfg) {
   }, 500))
 }
 
-const loadScript = src => {
+function loadScript(src) {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script')
     script.type = 'text/javascript'
