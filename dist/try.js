@@ -82,7 +82,8 @@ function cfgHandle(userCfg) {
     }, userCfg.swaggerOptions),
     redocOptions: [redoc_openApi || userCfg.openApi || testOpenApi, redoc_options || {
       enableConsole: true
-    }, redoc_dom || document.getElementById('redoc-container'), redoc_callBack || function () {
+    }, redoc_dom || document.getElementById('redoc-container'), function () {
+      redoc_callBack();
       initSwagger(cfg.swaggerOptions);
       $(".swaggerBox").addClass("hide");
     }]
