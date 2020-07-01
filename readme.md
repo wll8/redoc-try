@@ -1,13 +1,12 @@
 ## redoc try
-[👉 online preview](https://wll8.github.io/redoc-try/index.html)
+- [👉 View video](https://cdn.jsdelivr.net/gh/wll8/static/Video_20200518145834_redoc_show.mp4)
+- [👉 online preview](https://wll8.github.io/redoc-try/index.html)
 
 Add `Try it out` function like [swagger](https://petstore.swagger.io/) on [redoc](https://github.com/Redocly/redoc).
 
 ![re-doc try](https://github.com/wll8/redoc-try/raw/master/redoc_show.png)
 
 ## how to use?
-
-[View video](https://cdn.jsdelivr.net/gh/wll8/static/Video_20200518145834_redoc_show.mp4)
 
 ``` html
 <body>
@@ -31,14 +30,14 @@ initTry({
   // onlySwagger: true,
   // tryText: `try`, // Try button text
   // trySwaggerInApi: true, // Whether to display swagger debugging window under api?
-  // redocOptions: {enableConsole: true},
+  // redocOptions: {enableConsole: true}, // Or the format is an array: `[specOrSpecUrl?, options?, element?, callback?]`
   // swaggerOptions: {dom_id: `#swagger-ui`},
 })
 ```
 
 ## Why do you need it?
 
-According to the description of [#53](https://github.com/Redocly/redoc/issues/53), the try function is no longer developed, maybe it has become a paid function.
+According to the description of [#53](https://github.com/Redocly/redoc/issues/53#issuecomment-576377856), the try function is no longer developed, maybe it has become a paid function.
 
 If you need to simply have this feature, you don't need to redevelop it, because it will consume a lot of time and lack community maintenance.
 
