@@ -42,7 +42,7 @@ function cfgHandle(userCfg) {
       redoc_options || {enableConsole: true},
       redoc_dom || document.getElementById('redoc-container'),
       () => {
-        redoc_callBack()
+        redoc_callBack && redoc_callBack()
         initSwagger(cfg.swaggerOptions)
         $(`.swaggerBox`).addClass(`hide`)
       },
