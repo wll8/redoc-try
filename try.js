@@ -222,19 +222,6 @@ function trySwagger(cfg) {
     $opblock.addClass(`open`)
     console.log(`selStr`, selStr)
     $(`.swaggerBox`).scrollTo($swaggerApiDom.parent())
-    // Some dom change events, when the user operates the swagger api, such as clicking `try it out`, the height is re-acquired and synchronized to swaggerBox and swaggerShadow
-    const domChange = [
-      `DOMAttrModified`,
-      `DOMAttributeNameChanged`,
-      `DOMCharacterDataModified`,
-      `DOMElementNameChanged`,
-      `DOMNodeInserted`,
-      `DOMNodeInsertedIntoDocument`,
-      `DOMNodeRemoved`,
-      `DOMNodeRemovedFromDocument`,
-      `DOMSubtreeModified`
-    ].join(` `)
-    $('.opblock').off(domChange) // Cancel the monitoring of all similar elements before monitoring, to avoid more than the monitoring causing jams
     function changeFn() {
       const pos = getAbsolutePosition($opblock[0])
       if (pos.height === 0) {
@@ -253,8 +240,13 @@ function trySwagger(cfg) {
         }
       }
     }
-    setTimeout(changeFn, 500) // If there is no dom change, it is also executed, after 500 milliseconds (waiting for style display)
-    $opblock.on(domChange, debounce(changeFn, 100))
+    const observer = new MutationObserver(changeFn)
+    observer.disconnect()
+    observer.observe($opblock[0], {
+      attributes: true,
+      childList: true,
+      subtree: true,
+    })
   })
 
   // When changing the browser window size, reset the state of swaggerBox
