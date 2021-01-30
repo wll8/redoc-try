@@ -1,3 +1,6 @@
+;((window, undefined) => {
+window.initTry = window.initTry || initTry
+
 function initTry(userCfg) {
   loadScript(`//cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`)
     .then(() => loadScript(`//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`))
@@ -313,3 +316,4 @@ function dataType(data, type) {
   const dataType = Object.prototype.toString.call(data).match(/\s(.+)]/)[1].toLowerCase()
   return type ? (dataType === type.toLowerCase()) : dataType
 }
+})(window);
