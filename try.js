@@ -1,9 +1,11 @@
 function initTry(userCfg) {
   loadScript(`//cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`)
     .then(() => loadScript(`//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`))
-    .then(() => loadScript(`//unpkg.com/swagger-ui-dist@3.25.1/swagger-ui-bundle.js`))
+    .then(() => loadScript(`//cdn.jsdelivr.net/npm/swagger-ui-dist@3.25.1/swagger-ui-bundle.js`))
+    .then(() => loadScript(`//cdn.jsdelivr.net/npm/compare-versions@3.6.0/index.min.js`))
     .then(() => {
       const cfg = cfgHandle(userCfg)
+      window.cfg = cfg
       if(cfg.onlySwagger) {
         initSwagger(cfg.swaggerOptions)
       } else {
@@ -23,11 +25,18 @@ function cfgHandle(userCfg) {
   const testOpenApi = `//httpbin.org/spec.json` // `//petstore.swagger.io/v2/swagger.json`
   const redocOptionsRes = dataType(redocOptions, `object`) ? [undefined, redocOptions] : (redocOptions || [])
   const [redoc_openApi, redoc_options, redoc_dom, redoc_callBack] = redocOptionsRes
+  const redocVersion = ( // Read the redoc version number from the label
+    (
+      $(`script[src*="/redoc@"]`).attr(`src`) || ``
+    ).match(/redoc@(.+?)\//) || []
+  )[1]
   const cfg = {
     openApi: testOpenApi,
     onlySwagger: false, // Only render swagger, in some cases redoc will render openApi error
     tryText: `try`, // try button text
     trySwaggerInApi: true, // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window
+    redocVersion,
+
     ...userCfg,
     swaggerOptions: {
       url: userCfg.openApi || testOpenApi,
@@ -115,15 +124,15 @@ function initSwagger(swaggerOptions) {
     </div>
   `)
   // swagger-ui.css
-  $('head').append(`<link rel="stylesheet" href="//unpkg.com/swagger-ui-dist@3.25.1/swagger-ui.css" />`)
+  $('head').append(`<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/swagger-ui-dist@3.25.1/swagger-ui.css" />`)
   SwaggerUIBundle(swaggerOptions)
 }
 
 function trySwagger(cfg) {
   initCss()
   { // Add a button to set auth to redoc
-    $(`.sc-htoDjs.sc-fYxtnH.dTJWQH`).after($(`
-      <div class="sc-tilXH jIdpVJ btn setAuth">AUTHORIZE</div>
+    $(`h1:eq(0)`).after($(`
+      <div class="${$(`a[href*="swagger.json"]:eq(0)`).attr(`class`)} btn setAuth">AUTHORIZE</div>
     `))
     $(`.btn.setAuth`).click(() => {
       // The pop-up window in swaggerBox can be displayed, but the swaggerBox itself is hidden
@@ -166,7 +175,11 @@ function trySwagger(cfg) {
     // The following 3 lines add class names to some necessary elements to facilitate acquisition or identification
     $(`.try>div>div:nth-child(2)`).addClass(`apiBlock`)
     $(`.try .apiBlock>div:nth-child(1)`).addClass(`fullApiBox`)
-    $(`.try .apiBlock>div>div:nth-child(1)`).addClass(`fullApi`)
+    if(window.compareVersions.compare(window.cfg.redocVersion, `2.0.0-rc.32`, `<=`)) {
+      $(`.try .apiBlock>div>div:nth-child(1)`).addClass(`fullApi`)
+    } else {
+      $(`.try .apiBlock>div>button`).addClass(`fullApi`)
+    }
     const appendSwaggerShadow = () => $(`.try .fullApiBox`).append(`<div class="swaggerShadow"></div>`) // Add a swaggerShadow element to synchronize the height of swagger and use it to occupy space
     // If cfg.trySwaggerInApi === true then swaggerShadow will be added under fullApi, otherwise it may be under reqBox
     if (cfg.trySwaggerInApi === true) {

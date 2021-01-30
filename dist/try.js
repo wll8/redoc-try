@@ -30,9 +30,12 @@ function initTry(userCfg) {
   loadScript("//cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js").then(function () {
     return loadScript("//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js");
   }).then(function () {
-    return loadScript("//unpkg.com/swagger-ui-dist@3.25.1/swagger-ui-bundle.js");
+    return loadScript("//cdn.jsdelivr.net/npm/swagger-ui-dist@3.25.1/swagger-ui-bundle.js");
+  }).then(function () {
+    return loadScript("//cdn.jsdelivr.net/npm/compare-versions@3.6.0/index.min.js");
   }).then(function () {
     var cfg = cfgHandle(userCfg);
+    window.cfg = cfg;
 
     if (cfg.onlySwagger) {
       initSwagger(cfg.swaggerOptions);
@@ -65,13 +68,18 @@ function cfgHandle(userCfg) {
       redoc_dom = _redocOptionsRes[2],
       redoc_callBack = _redocOptionsRes[3];
 
+  var redocVersion = ( // Read the redoc version number from the label
+  ($("script[src*=\"/redoc@\"]").attr("src") || "").match(/redoc@(.+?)\//) || [])[1];
+
   var cfg = _objectSpread(_objectSpread({
     openApi: testOpenApi,
     onlySwagger: false,
     // Only render swagger, in some cases redoc will render openApi error
     tryText: "try",
     // try button text
-    trySwaggerInApi: true
+    trySwaggerInApi: true,
+    // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window
+    redocVersion: redocVersion
   }, userCfg), {}, {
     swaggerOptions: _objectSpread({
       url: userCfg.openApi || testOpenApi,
@@ -101,7 +109,7 @@ function initSwagger(swaggerOptions) {
   // dom
   $('body').append("\n    <div class=\"swaggerBox\">\n      <div id=\"swagger-ui\"></div>\n    </div>\n  "); // swagger-ui.css
 
-  $('head').append("<link rel=\"stylesheet\" href=\"//unpkg.com/swagger-ui-dist@3.25.1/swagger-ui.css\" />");
+  $('head').append("<link rel=\"stylesheet\" href=\"//cdn.jsdelivr.net/npm/swagger-ui-dist@3.25.1/swagger-ui.css\" />");
   SwaggerUIBundle(swaggerOptions);
 }
 
@@ -109,7 +117,7 @@ function trySwagger(cfg) {
   initCss();
   {
     // Add a button to set auth to redoc
-    $(".sc-htoDjs.sc-fYxtnH.dTJWQH").after($("\n      <div class=\"sc-tilXH jIdpVJ btn setAuth\">AUTHORIZE</div>\n    "));
+    $("h1:eq(0)").after($("\n      <div class=\"".concat($("a[href*=\"swagger.json\"]:eq(0)").attr("class"), " btn setAuth\">AUTHORIZE</div>\n    ")));
     $(".btn.setAuth").click(function () {
       // The pop-up window in swaggerBox can be displayed, but the swaggerBox itself is hidden
       var $swaggerBox = $(".swaggerBox").removeClass("hide").css({
@@ -158,7 +166,12 @@ function trySwagger(cfg) {
 
     $(".try>div>div:nth-child(2)").addClass("apiBlock");
     $(".try .apiBlock>div:nth-child(1)").addClass("fullApiBox");
-    $(".try .apiBlock>div>div:nth-child(1)").addClass("fullApi");
+
+    if (window.compareVersions.compare(window.cfg.redocVersion, "2.0.0-rc.32", "<=")) {
+      $(".try .apiBlock>div>div:nth-child(1)").addClass("fullApi");
+    } else {
+      $(".try .apiBlock>div>button").addClass("fullApi");
+    }
 
     var appendSwaggerShadow = function appendSwaggerShadow() {
       return $(".try .fullApiBox").append("<div class=\"swaggerShadow\"></div>");

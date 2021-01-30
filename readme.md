@@ -11,8 +11,8 @@ Add `Try it out` function like [swagger](https://petstore.swagger.io/) on [redoc
 ``` html
 <body>
   <div id="redoc-container"></div>
-  <script src="//cdn.jsdelivr.net/npm/redoc@2.0.0-rc.28/bundles/redoc.standalone.min.js"> </script>
-  <script src="//cdn.jsdelivr.net/gh/wll8/redoc-try/dist/try.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/redoc@2.0.0-rc.48/bundles/redoc.standalone.min.js"> </script>
+  <script src="//cdn.jsdelivr.net/gh/wll8/redoc-try@1.3.4/dist/try.js"></script>
   <script>
     initTry(`https://petstore.swagger.io/v2/swagger.json`)
   </script>
@@ -27,6 +27,7 @@ When the parameter type is an object, you can configure the following:
 ``` js
 initTry({
   openApi: `//petstore.swagger.io/v2/swagger.json`, // openApi address
+  // redocVersion: `2.0.0-rc.48`, // Used to handle compatibility issues, if not specified, read from the URL
   // onlySwagger: true,
   // tryText: `try`, // Try button text
   // trySwaggerInApi: true, // Whether to display swagger debugging window under api?
