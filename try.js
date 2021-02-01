@@ -178,7 +178,7 @@ function trySwagger(cfg) {
     // The following 3 lines add class names to some necessary elements to facilitate acquisition or identification
     $(`.try>div>div:nth-child(2)`).addClass(`apiBlock`)
     $(`.try .apiBlock>div:nth-child(1)`).addClass(`fullApiBox`)
-    if(window.compareVersions.compare(window.cfg.redocVersion, `2.0.0-rc.32`, `<=`)) {
+    if(window.cfg.redocVersion !== 'next' && window.compareVersions.compare(window.cfg.redocVersion, `2.0.0-rc.32`, `<=`)) {
       $(`.try .apiBlock>div>div:nth-child(1)`).addClass(`fullApi`)
     } else {
       $(`.try .apiBlock>div>button`).addClass(`fullApi`)
