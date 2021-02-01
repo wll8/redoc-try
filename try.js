@@ -39,6 +39,8 @@ function cfgHandle(userCfg) {
     tryText: `try`, // try button text
     trySwaggerInApi: true, // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window
     redocVersion,
+    authBtnPosSelector: `h1:eq(0)`,
+    authBtnText: `AUTHORIZE`,
 
     ...userCfg,
     swaggerOptions: {
@@ -134,8 +136,8 @@ function initSwagger(swaggerOptions) {
 function trySwagger(cfg) {
   initCss()
   { // Add a button to set auth to redoc
-    $(`h1:eq(0)`).after($(`
-      <div class="${$(`a[href*="swagger.json"]:eq(0)`).attr(`class`)} btn setAuth">AUTHORIZE</div>
+    $(cfg.authBtnPosSelector).after($(`
+      <div class="${$(`a[href*="swagger.json"]:eq(0)`).attr(`class`)} btn setAuth">` + cfg.authBtnText + `</div>
     `))
     $(`.btn.setAuth`).click(() => {
       // The pop-up window in swaggerBox can be displayed, but the swaggerBox itself is hidden
