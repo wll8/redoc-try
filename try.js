@@ -49,6 +49,7 @@ function cfgHandle(userCfg) {
       onComplete: () => {
         trySwagger(cfg)
       },
+      tryItOutEnabled: true,
       ...userCfg.swaggerOptions
     },
     redocOptions: [
