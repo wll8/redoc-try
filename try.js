@@ -4,7 +4,7 @@ window.initTry = window.initTry || initTry
 function initTry(userCfg) {
   loadScript(`//cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`)
     .then(() => loadScript(`//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`))
-    .then(() => loadScript(`//cdn.jsdelivr.net/npm/swagger-ui-dist@3.25.1/swagger-ui-bundle.js`))
+    .then(() => loadScript(`//cdn.jsdelivr.net/npm/swagger-ui-dist@3.47.1/swagger-ui-bundle.js`))
     .then(() => loadScript(`//cdn.jsdelivr.net/npm/compare-versions@3.6.0/index.min.js`))
     .then(() => {
       const cfg = cfgHandle(userCfg)
