@@ -114,9 +114,6 @@ function initCss() {
         visibility: visible;
         cursor: initial;
       }
-      .opblock-summary * {
-        display: none;
-      }
       .opblock-description-wrapper {
         display: none;
       }
