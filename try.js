@@ -90,6 +90,7 @@ function initCss() {
         position: relative;
       }
       @media print, screen and (max-width: 85rem) {
+        .eIeJha,
         .dtUibw {
           padding: 4px;
         }
