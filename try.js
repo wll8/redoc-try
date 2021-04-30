@@ -71,20 +71,6 @@ function initCss() {
   // reset swagger-ui css
   $('head').append(`
     <style>
-      /* Reset the style of swagger-ui */
-      body .swagger-ui .wrapper {
-        padding: 0;
-      }
-      /* Disable api bar to avoid problems */
-      body .swaggerBox:not(.onlySwagger) .swagger-ui .opblock .opblock-summary {
-        cursor: not-allowed;
-        pointer-events: none;
-      }
-      /* Disable the api bar, but exclude the authorization button */
-      body .swagger-ui .authorization__btn {
-        cursor: initial;
-        pointer-events: initial;
-      }
       /* Set the position of swaggerBox with body as the relative element */
       body {
         position: relative;
@@ -95,6 +81,35 @@ function initCss() {
           padding: 4px;
         }
       }
+
+      .swaggerBox.hide {
+        visibility: hidden;
+        cursor: none;
+        width: 0;
+        height: 0;
+      }
+      .swaggerBox.show {
+        visibility: visible;
+        cursor: initial;
+      }
+
+      /* Reset the style of swagger-ui */
+      .swaggerBox .swagger-ui .wrapper {
+        padding: 0;
+      }
+
+      /* Disable api bar to avoid problems */
+      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock .opblock-summary {
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      /* Disable the api bar, but exclude the authorization button */
+      .swaggerBox .swagger-ui .authorization__btn {
+        cursor: initial;
+        pointer-events: initial;
+      }
+
       .swaggerBox {
         border-radius: 4px;
         background-color: #fff;
@@ -107,16 +122,6 @@ function initCss() {
       }
       .swaggerBox:not(.onlySwagger) {
         overflow: hidden;
-      }
-      .hide {
-        visibility: hidden;
-        cursor: none;
-        width: 0;
-        height: 0;
-      }
-      .show {
-        visibility: visible;
-        cursor: initial;
       }
 
       /* Hide some disturbing elements */
@@ -133,7 +138,7 @@ function initCss() {
         display: none;
       }
 
-      .tryBtn {
+      .swaggerBox .tryBtn {
         margin-right: 10px;
         background-color: #fff;
       }
