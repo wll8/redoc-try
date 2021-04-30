@@ -11,6 +11,7 @@ function initTry(userCfg) {
       window.cfg = cfg
       if(cfg.onlySwagger) {
         initSwagger(cfg.swaggerOptions)
+        $(`.swaggerBox`).addClass(`onlySwagger`)
       } else {
         Redoc.init(...cfg.redocOptions)
       }
@@ -75,7 +76,7 @@ function initCss() {
         padding: 0;
       }
       /* Disable api bar to avoid problems */
-      body .swagger-ui .opblock .opblock-summary {
+      body .swaggerBox:not(.onlySwagger) .swagger-ui .opblock .opblock-summary {
         cursor: not-allowed;
         pointer-events: none;
       }
@@ -98,11 +99,13 @@ function initCss() {
         background-color: #fff;
         width: 100%;
         height: 100vh;
-        overflow: hidden;
         position: absolute;
         top: 0;
         left: 0;
         z-index: 1;
+      }
+      .swaggerBox:not(.onlySwagger) {
+        overflow: hidden;
       }
       .hide {
         visibility: hidden;
