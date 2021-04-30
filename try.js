@@ -117,6 +117,21 @@ function initCss() {
         visibility: visible;
         cursor: initial;
       }
+      .opblock-description-wrapper {
+        display: none;
+      }
+      :not(.live-responses-table).responses-table {
+        display: none;
+      }
+      .responses-inner>div>h4 {
+        display: none;
+      }
+      .try-out {
+        display: none;
+      }
+      .btn.cancel {
+        display: none;
+      }
       .tryBtn {
         margin-right: 10px;
         background-color: #fff;
