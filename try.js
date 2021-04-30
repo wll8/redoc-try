@@ -117,7 +117,7 @@ function initCss() {
         visibility: visible;
         cursor: initial;
       }
-      .opblock-description-wrapper {
+      .opblock-body > .opblock-description-wrapper {
         display: none;
       }
       :not(.live-responses-table).responses-table {
