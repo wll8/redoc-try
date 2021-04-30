@@ -117,21 +117,21 @@ function initCss() {
         visibility: visible;
         cursor: initial;
       }
-      .opblock-description-wrapper {
+
+      /* Hide some disturbing elements */
+      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock-summary {
+        visibility: hidden;
+        padding: 0;
+      }
+      .swaggerBox:not(.onlySwagger) .btn.cancel,
+      .swaggerBox:not(.onlySwagger) .try-out,
+      .swaggerBox:not(.onlySwagger) .responses-inner>div>h4,
+      .swaggerBox:not(.onlySwagger) :not(.live-responses-table).responses-table,
+      .swaggerBox:not(.onlySwagger) .opblock-description-wrapper,
+      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock-summary * {
         display: none;
       }
-      :not(.live-responses-table).responses-table {
-        display: none;
-      }
-      .responses-inner>div>h4 {
-        display: none;
-      }
-      .try-out {
-        display: none;
-      }
-      .btn.cancel {
-        display: none;
-      }
+
       .tryBtn {
         margin-right: 10px;
         background-color: #fff;
