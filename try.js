@@ -15,6 +15,7 @@ function initTry(userCfg) {
       } else {
         Redoc.init(...cfg.redocOptions)
       }
+      initCss()
     })
     .catch(() => {
       console.error('Something went wrong.')
@@ -48,7 +49,9 @@ function cfgHandle(userCfg) {
       url: userCfg.openApi || testOpenApi,
       dom_id: `#swagger-ui`,
       onComplete: () => {
-        trySwagger(cfg)
+        if(Boolean(cfg.onlySwagger) === false) {
+          trySwagger(cfg)
+        }
       },
       tryItOutEnabled: true,
       ...userCfg.swaggerOptions
@@ -123,7 +126,9 @@ function initCss() {
       .swaggerBox:not(.onlySwagger) {
         overflow: hidden;
       }
-
+      .swaggerBox .swagger-ui svg:not(:root) {
+        display: none;
+      }
       /* Hide some disturbing elements */
       .swaggerBox:not(.onlySwagger) .swagger-ui .opblock-summary {
         visibility: hidden;
@@ -159,7 +164,6 @@ function initSwagger(swaggerOptions) {
 }
 
 function trySwagger(cfg) {
-  initCss()
   { // Add a button to set auth to redoc
     $(cfg.authBtnPosSelector).after($(`
       <div class="${$(`a[href*="swagger.json"]:eq(0)`).attr(`class`)} btn setAuth">` + cfg.authBtnText + `</div>
