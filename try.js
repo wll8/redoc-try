@@ -167,7 +167,7 @@ function initSwagger(swaggerOptions) {
 function trySwagger(cfg) {
   { // Add a button to set auth to redoc
     $(cfg.authBtnPosSelector).after($(`
-      <div class="${$(`a[href*="swagger.json"]:eq(0)`).attr(`class`)} btn setAuth">` + cfg.authBtnText + `</div>
+      <div class="${$(`a[download]:eq(0)`).attr(`class`)} btn setAuth">` + cfg.authBtnText + `</div>
     `))
     $(`.btn.setAuth`).click(() => {
       // The pop-up window in swaggerBox can be displayed, but the swaggerBox itself is hidden
