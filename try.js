@@ -134,6 +134,7 @@ function initCss() {
         visibility: hidden;
         padding: 0;
       }
+      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock .opblock-section-header,
       .swaggerBox:not(.onlySwagger) .btn.cancel,
       .swaggerBox:not(.onlySwagger) .try-out,
       .swaggerBox:not(.onlySwagger) .responses-inner>div>h4,
