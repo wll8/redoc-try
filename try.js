@@ -288,6 +288,7 @@ function trySwagger(cfg) {
         }
       }
     }
+    changeFn()
     const observer = new MutationObserver(changeFn)
     observer.disconnect()
     observer.observe($opblock[0], {
