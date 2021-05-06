@@ -133,7 +133,7 @@ function initCss() {
       .swaggerBox:not(.onlySwagger) .try-out,
       .swaggerBox:not(.onlySwagger) .responses-inner>div>h4,
       .swaggerBox:not(.onlySwagger) :not(.live-responses-table).responses-table,
-      .swaggerBox:not(.onlySwagger) .opblock-description-wrapper,
+      .swaggerBox:not(.onlySwagger) .opblock-body > .opblock-description-wrapper,
       .swaggerBox:not(.onlySwagger) .swagger-ui .opblock-summary * {
         display: none;
       }
