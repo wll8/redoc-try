@@ -2,7 +2,7 @@
 window.initTry = window.initTry || initTry
 
 function initTry(userCfg) {
-  loadScript(`//cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js`)
+  loadScript(`//cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js`)
     .then(() => loadScript(`//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`))
     .then(() => loadScript(`//cdn.jsdelivr.net/npm/swagger-ui-dist@3.48.0/swagger-ui-bundle.js`))
     .then(() => loadScript(`//cdn.jsdelivr.net/npm/compare-versions@3.6.0/index.min.js`))
