@@ -2,10 +2,10 @@
 window.initTry = window.initTry || initTry
 
 function initTry(userCfg) {
-  loadScript(`//cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js`)
-    .then(() => loadScript(`//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`))
-    .then(() => loadScript(`//cdn.jsdelivr.net/npm/swagger-ui-dist@3.48.0/swagger-ui-bundle.js`))
-    .then(() => loadScript(`//cdn.jsdelivr.net/npm/compare-versions@3.6.0/index.min.js`))
+  loadScript(`https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js`)
+    .then(() => loadScript(`https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`))
+    .then(() => loadScript(`https://cdn.jsdelivr.net/npm/swagger-ui-dist@3.48.0/swagger-ui-bundle.js`))
+    .then(() => loadScript(`https://cdn.jsdelivr.net/npm/compare-versions@3.6.0/index.min.js`))
     .then(() => {
       const cfg = cfgHandle(userCfg)
       window.cfg = cfg
@@ -27,7 +27,7 @@ function cfgHandle(userCfg) {
     userCfg = { openApi: userCfg }
   }
   const { redocOptions } = userCfg
-  const testOpenApi = `//httpbin.org/spec.json` // `//petstore.swagger.io/v2/swagger.json`
+  const testOpenApi = `https://httpbin.org/spec.json` // `https://petstore.swagger.io/v2/swagger.json`
   const redocOptionsRes = dataType(redocOptions, `object`) ? [undefined, redocOptions] : (redocOptions || [])
   const [redoc_openApi, redoc_options, redoc_dom, redoc_callBack] = redocOptionsRes
   const redocVersion = ( // Read the redoc version number from the label
@@ -160,7 +160,7 @@ function initSwagger(swaggerOptions) {
     </div>
   `)
   // swagger-ui.css
-  $('head').append(`<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/swagger-ui-dist@3.25.1/swagger-ui.css" />`)
+  $('head').append(`<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@3.25.1/swagger-ui.css" />`)
   SwaggerUIBundle(swaggerOptions)
 }
 
