@@ -126,9 +126,6 @@ function initCss() {
       .swaggerBox:not(.onlySwagger) {
         overflow: hidden;
       }
-      .swaggerBox .swagger-ui svg:not(:root) {
-        display: none;
-      }
       /* Hide some disturbing elements */
       .swaggerBox:not(.onlySwagger) .swagger-ui .opblock-summary {
         visibility: hidden;
