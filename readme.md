@@ -1,6 +1,7 @@
 ## redoc try
 - [👉 View video](https://cdn.jsdelivr.net/gh/wll8/static/Video_20200518145834_redoc_show.mp4)
 - [👉 online preview](https://wll8.github.io/redoc-try/index.html)
+- [👉 Related tool recommendations 🎉](https://github.com/wll8/mockm)
 
 Add `Try it out` function like [swagger](https://petstore.swagger.io/) on [redoc](https://github.com/Redocly/redoc).
 
@@ -12,7 +13,7 @@ Add `Try it out` function like [swagger](https://petstore.swagger.io/) on [redoc
 <body>
   <div id="redoc-container"></div>
   <script src="https://cdn.jsdelivr.net/npm/redoc@2.0.0-rc.55/bundles/redoc.standalone.min.js"> </script>
-  <script src="https://cdn.jsdelivr.net/gh/wll8/redoc-try@1.3.4/dist/try.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/wll8/redoc-try@1.4.0/dist/try.js"></script>
   <script>
     // initTry(`https://petstore.swagger.io/v2/swagger.json`)
     initTry({
@@ -23,6 +24,7 @@ Add `Try it out` function like [swagger](https://petstore.swagger.io/) on [redoc
 </body>
 ```
 
+Note: No need to use `<redoc />` anymore.
 ## Options
 When the parameter type is a string, the value is openApi.
 
@@ -37,6 +39,7 @@ initTry({
   // trySwaggerInApi: true, // Whether to display swagger debugging window under api?
   // redocOptions: {enableConsole: true}, // Or the format is an array: `[specOrSpecUrl?, options?, element?, callback?]`
   // swaggerOptions: {dom_id: `#swagger-ui`},
+  // pure: false, // Concise mode, hide some existing elements of redoc
 })
 ```
 

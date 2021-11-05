@@ -43,6 +43,7 @@ function cfgHandle(userCfg) {
     redocVersion,
     authBtnPosSelector: `h1:eq(0)`,
     authBtnText: `AUTHORIZE`,
+    pure: false, // Concise mode, hide some existing elements of redoc
 
     ...userCfg,
     swaggerOptions: {
@@ -64,6 +65,7 @@ function cfgHandle(userCfg) {
         redoc_callBack && redoc_callBack()
         initSwagger(cfg.swaggerOptions)
         $(`.swaggerBox`).addClass(`hide`)
+        cfg.pure && $(`.swaggerBox`).addClass(`pure`)
       },
     ],
   }
@@ -127,17 +129,21 @@ function initCss() {
         overflow: hidden;
       }
       /* Hide some disturbing elements */
-      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock-summary {
+      .swaggerBox.pure:not(.onlySwagger) .swagger-ui .opblock-summary {
         visibility: hidden;
         padding: 0;
       }
+      .swaggerBox.pure:not(.onlySwagger) .opblock-section thead,
+      .swaggerBox.pure:not(.onlySwagger) .swagger-ui .opblock-summary * {
+        display: none;
+      }
+
       .swaggerBox:not(.onlySwagger) .swagger-ui .opblock .opblock-section-header,
       .swaggerBox:not(.onlySwagger) .btn.cancel,
       .swaggerBox:not(.onlySwagger) .try-out,
       .swaggerBox:not(.onlySwagger) .responses-inner>div>h4,
       .swaggerBox:not(.onlySwagger) :not(.live-responses-table).responses-table,
-      .swaggerBox:not(.onlySwagger) .opblock-body > .opblock-description-wrapper,
-      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock-summary * {
+      .swaggerBox:not(.onlySwagger) .opblock-body > .opblock-description-wrapper {
         display: none;
       }
 

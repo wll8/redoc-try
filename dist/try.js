@@ -1,6 +1,6 @@
 "use strict";
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -10,7 +10,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -20,7 +20,7 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
@@ -50,6 +50,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
         (_Redoc = Redoc).init.apply(_Redoc, _toConsumableArray(cfg.redocOptions));
       }
+
+      initCss();
     })["catch"](function () {
       console.error('Something went wrong.');
     });
@@ -87,13 +89,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window
       redocVersion: redocVersion,
       authBtnPosSelector: "h1:eq(0)",
-      authBtnText: "AUTHORIZE"
+      authBtnText: "AUTHORIZE",
+      pure: false
     }, userCfg), {}, {
       swaggerOptions: _objectSpread({
         url: userCfg.openApi || testOpenApi,
         dom_id: "#swagger-ui",
         onComplete: function onComplete() {
-          trySwagger(cfg);
+          if (Boolean(cfg.onlySwagger) === false) {
+            trySwagger(cfg);
+          }
         },
         tryItOutEnabled: true
       }, userCfg.swaggerOptions),
@@ -103,6 +108,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         redoc_callBack && redoc_callBack();
         initSwagger(cfg.swaggerOptions);
         $(".swaggerBox").addClass("hide");
+        cfg.pure && $(".swaggerBox").addClass("pure");
       }]
     });
 
@@ -111,7 +117,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   function initCss() {
     // reset swagger-ui css
-    $('head').append("\n    <style>\n      /* Set the position of swaggerBox with body as the relative element */\n      body {\n        position: relative;\n      }\n      @media print, screen and (max-width: 85rem) {\n        .eIeJha,\n        .dtUibw {\n          padding: 4px;\n        }\n      }\n\n      .swaggerBox.hide {\n        visibility: hidden;\n        cursor: none;\n        width: 0;\n        height: 0;\n      }\n      .swaggerBox.show {\n        visibility: visible;\n        cursor: initial;\n      }\n\n      /* Reset the style of swagger-ui */\n      .swaggerBox .swagger-ui .wrapper {\n        padding: 0;\n      }\n\n      /* Disable api bar to avoid problems */\n      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock .opblock-summary {\n        cursor: not-allowed;\n        pointer-events: none;\n      }\n\n      /* Disable the api bar, but exclude the authorization button */\n      .swaggerBox .swagger-ui .authorization__btn {\n        cursor: initial;\n        pointer-events: initial;\n      }\n\n      .swaggerBox {\n        border-radius: 4px;\n        background-color: #fff;\n        width: 100%;\n        height: 100vh;\n        position: absolute;\n        top: 0;\n        left: 0;\n        z-index: 1;\n      }\n      .swaggerBox:not(.onlySwagger) {\n        overflow: hidden;\n      }\n\n      /* Hide some disturbing elements */\n      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock-summary {\n        visibility: hidden;\n        padding: 0;\n      }\n      .swaggerBox:not(.onlySwagger) .btn.cancel,\n      .swaggerBox:not(.onlySwagger) .try-out,\n      .swaggerBox:not(.onlySwagger) .responses-inner>div>h4,\n      .swaggerBox:not(.onlySwagger) :not(.live-responses-table).responses-table,\n      .swaggerBox:not(.onlySwagger) .opblock-body > .opblock-description-wrapper,\n      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock-summary * {\n        display: none;\n      }\n\n      .swaggerBox .tryBtn {\n        margin-right: 10px;\n        background-color: #fff;\n      }\n    </style>\n  ");
+    $('head').append("\n    <style>\n      /* Set the position of swaggerBox with body as the relative element */\n      body {\n        position: relative;\n      }\n      @media print, screen and (max-width: 85rem) {\n        .eIeJha,\n        .dtUibw {\n          padding: 4px;\n        }\n      }\n\n      .swaggerBox.hide {\n        visibility: hidden;\n        cursor: none;\n        width: 0;\n        height: 0;\n      }\n      .swaggerBox.show {\n        visibility: visible;\n        cursor: initial;\n      }\n\n      /* Reset the style of swagger-ui */\n      .swaggerBox .swagger-ui .wrapper {\n        padding: 0;\n      }\n\n      /* Disable api bar to avoid problems */\n      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock .opblock-summary {\n        cursor: not-allowed;\n        pointer-events: none;\n      }\n\n      /* Disable the api bar, but exclude the authorization button */\n      .swaggerBox .swagger-ui .authorization__btn {\n        cursor: initial;\n        pointer-events: initial;\n      }\n\n      .swaggerBox {\n        border-radius: 4px;\n        background-color: #fff;\n        width: 100%;\n        height: 100vh;\n        position: absolute;\n        top: 0;\n        left: 0;\n        z-index: 1;\n      }\n      .swaggerBox:not(.onlySwagger) {\n        overflow: hidden;\n      }\n      /* Hide some disturbing elements */\n      .swaggerBox.pure:not(.onlySwagger) .swagger-ui .opblock-summary {\n        visibility: hidden;\n        padding: 0;\n      }\n      .swaggerBox.pure:not(.onlySwagger) .opblock-section thead,\n      .swaggerBox.pure:not(.onlySwagger) .swagger-ui .opblock-summary * {\n        display: none;\n      }\n\n      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock .opblock-section-header,\n      .swaggerBox:not(.onlySwagger) .btn.cancel,\n      .swaggerBox:not(.onlySwagger) .try-out,\n      .swaggerBox:not(.onlySwagger) .responses-inner>div>h4,\n      .swaggerBox:not(.onlySwagger) :not(.live-responses-table).responses-table,\n      .swaggerBox:not(.onlySwagger) .opblock-body > .opblock-description-wrapper {\n        display: none;\n      }\n\n      .swaggerBox .tryBtn {\n        margin-right: 10px;\n        background-color: #fff;\n      }\n    </style>\n  ");
   }
 
   function initSwagger(swaggerOptions) {
@@ -123,10 +129,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   }
 
   function trySwagger(cfg) {
-    initCss();
     {
       // Add a button to set auth to redoc
-      $(cfg.authBtnPosSelector).after($("\n      <div class=\"".concat($("a[href*=\"swagger.json\"]:eq(0)").attr("class"), " btn setAuth\">") + cfg.authBtnText + "</div>\n    "));
+      $(cfg.authBtnPosSelector).after($("\n      <div class=\"".concat($("a[download]:eq(0)").attr("class"), " btn setAuth\">") + cfg.authBtnText + "</div>\n    "));
       $(".btn.setAuth").click(function () {
         // The pop-up window in swaggerBox can be displayed, but the swaggerBox itself is hidden
         var $swaggerBox = $(".swaggerBox").removeClass("hide").css({
@@ -267,6 +272,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         }
       }
 
+      changeFn();
       var observer = new MutationObserver(changeFn);
       observer.disconnect();
       observer.observe($opblock[0], {
