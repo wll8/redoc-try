@@ -102,6 +102,11 @@ function initCss() {
       .swaggerBox .swagger-ui .wrapper {
         padding: 0;
       }
+      .swaggerBox .swagger-ui .download-contents {
+        top: -10px;
+        right: 0;
+        width: initial;
+      }
 
       /* Disable api bar to avoid problems */
       .swaggerBox:not(.onlySwagger) .swagger-ui .opblock .opblock-summary {
