@@ -1,7 +1,6 @@
 ## redoc try
-- [👉 View video](https://cdn.jsdelivr.net/gh/wll8/static/Video_20200518145834_redoc_show.mp4)
+- [👉 View video](https://user-images.githubusercontent.com/28223260/200719793-cd027f71-e863-4d6b-a519-7ed6105e2461.mp4)
 - [👉 online preview](https://wll8.github.io/redoc-try/index.html)
-- [👉 Related tool recommendations 🎉](https://github.com/wll8/mockm)
 
 Add `Try it out` function like [swagger](https://petstore.swagger.io/) on [redoc](https://github.com/Redocly/redoc).
 
@@ -51,6 +50,8 @@ If you need to simply have this feature, you don't need to redevelop it, because
 
 We chose to transplant Swagger's `Try it out` function, which is complete, has community maintenance, and is familiar.
 
+## Related tools
+- [redoc-try-it-out](https://github.com/amorimjj/redoc-try-it-out) Close to the visual style of redoc, more options can be configured.
 
 ## License
 
