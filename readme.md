@@ -1,10 +1,12 @@
 ## redoc try
 - [👉 View video](https://user-images.githubusercontent.com/28223260/200719793-cd027f71-e863-4d6b-a519-7ed6105e2461.mp4)
-- [👉 online preview](https://wll8.github.io/redoc-try/index.html)
+- [👉 online ./test/openapi.3.yaml](https://wll8.github.io/redoc-try/index.html?openApi=./test/openapi.3.yaml)
+- [👉 online ./test/swagger.2.json](https://wll8.github.io/redoc-try/index.html?openApi=./test/swagger.2.json)
+- [👉 online https://httpbin.org/spec.json](https://wll8.github.io/redoc-try/index.html?openApi=https://httpbin.org/spec.json)
 
-Add `Try it out` function like [swagger](https://petstore.swagger.io/) on [redoc](https://github.com/Redocly/redoc).
+Add `Try it out` function like [swagger](https://petstore.swagger.io/) on [redoc](https://github.com/Redocly/redoc), Compatible with `yaml/json/3.0/2.0`.
 
-![re-doc try](https://github.com/wll8/redoc-try/raw/master/redoc_show.png)
+![redoc try](https://github.com/wll8/redoc-try/raw/master/redoc_show.png)
 
 ## how to use?
 
