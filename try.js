@@ -35,6 +35,13 @@ function cfgHandle(userCfg) {
       $(`script[src*="/redoc@"]`).attr(`src`) || ``
     ).match(/redoc@(.+?)\//) || []
   )[1]
+  if(typeof(userCfg.openApi) === `object`) {
+    const { openApi } = userCfg
+    const blob = new Blob([JSON.stringify(openApi)], {type: `application/json`})
+    const url  = URL.createObjectURL(blob)
+    userCfg.openApi = url
+    userCfg._openApiJSON = openApi
+  }
   const cfg = {
     openApi: testOpenApi,
     onlySwagger: false, // Only render swagger, in some cases redoc will render openApi error
@@ -58,7 +65,7 @@ function cfgHandle(userCfg) {
       ...userCfg.swaggerOptions
     },
     redocOptions: [
-      redoc_openApi || userCfg.openApi || testOpenApi,
+      redoc_openApi || userCfg._openApiJSON || userCfg.openApi || testOpenApi,
       redoc_options || {enableConsole: true},
       redoc_dom || document.getElementById('redoc-container'),
       () => {

@@ -1,8 +1,15 @@
 {
   "name": "redoc-try",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "[👉 online preview](https://wll8.github.io/redoc-try/index.html)",
-  "main": "try.js",
+  "main": "dist/try.js",
+  "env": {
+    "node": "14.15.5",
+    "yarn": "1.22.19"
+  },
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "babel try.js -d dist",
     "test": "echo \"Error: no test specified\" && exit 1"
