@@ -158,7 +158,10 @@ function initCss() {
       .swaggerBox:not(.onlySwagger) .opblock-body > .opblock-description-wrapper {
         display: none;
       }
-
+      .swaggerBox:not(.onlySwagger) .block div>span:last-child .operation-tag-content>span:last-child {
+        display: block;
+        margin-bottom: 100vh;
+      }
       .swaggerBox .tryBtn {
         margin-right: 10px;
         background-color: #fff;
