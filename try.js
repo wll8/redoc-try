@@ -213,7 +213,7 @@ function trySwagger(cfg) {
     event.stopPropagation()
     const $tryBtn = $(this)
     $(`.swaggerShadow`).remove() // First clear all temporary elements
-    const $operation = $tryBtn.parents(`[data-section-id]`) // Get the outermost api box
+    const $operation = $tryBtn.parents(`[data-section-id]`).last() // Get the outermost api box
     if ($operation.hasClass(`try`) === true) { // If the current API is already in the try state, uninstall and exit the function
       $(`.swaggerBox`).addClass(`hide`).removeClass(`show`)
       $operation.removeClass(`try`)
@@ -250,6 +250,7 @@ function trySwagger(cfg) {
 
     // Get the position of swaggerShadow
     let pos = {}
+    window.getAbsolutePosition = getAbsolutePosition
     pos = getAbsolutePosition($(`.try .swaggerShadow`)[0])
     pos = Object.keys(pos).reduce((prev, cur, index) => { // Add px to the number without unit, undefined when the number is 0
       const val = pos[cur]
