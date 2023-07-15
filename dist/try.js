@@ -149,7 +149,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       event.stopPropagation();
       var $tryBtn = $(this);
       $(".swaggerShadow").remove(); // First clear all temporary elements
-      var $operation = $tryBtn.parents("[data-section-id]"); // Get the outermost api box
+      var $operation = $tryBtn.parents("[data-section-id]").last(); // Get the outermost api box
       if ($operation.hasClass("try") === true) {
         // If the current API is already in the try state, uninstall and exit the function
         $(".swaggerBox").addClass("hide").removeClass("show");
@@ -192,6 +192,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
       // Get the position of swaggerShadow
       var pos = {};
+      window.getAbsolutePosition = getAbsolutePosition;
       pos = getAbsolutePosition($(".try .swaggerShadow")[0]);
       pos = Object.keys(pos).reduce(function (prev, cur, index) {
         // Add px to the number without unit, undefined when the number is 0
