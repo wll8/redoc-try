@@ -320,6 +320,10 @@ function trySwagger(cfg) {
       childList: true,
       subtree: true,
     })
+    const redoc_dom = window.cfg.redocOptions[2]
+    $(redoc_dom).off('click.redoc_dom').on('click.redoc_dom', () => {
+      renderPos()
+    })
   })
 
   // When changing the browser window size, reset the state of swaggerBox
