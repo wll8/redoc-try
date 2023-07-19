@@ -250,51 +250,55 @@ function trySwagger(cfg) {
     // get the click method and api
     const fullApi = $(`.try .fullApi`).text().replace(cfg.tryText, '').trim()
     const [, method, api] = fullApi.match(/(\w+)(.*)/)
-
-    // Get the position of swaggerShadow
-    let pos = {}
-    window.getAbsolutePosition = getAbsolutePosition
-    pos = getAbsolutePosition($(`.try .swaggerShadow`)[0])
-    pos = Object.keys(pos).reduce((prev, cur, index) => { // Add px to the number without unit, undefined when the number is 0
-      const val = pos[cur]
-      return {
-        ...prev,
-        [cur]: typeof (val) === `number` ? (val > 0 ? `${val}px` : undefined) : val,
-      }
-    }, {})
-
-    let oldHeight = pos.height ? `${pos.height}` : undefined
-
-    // Move swagger to the position of swaggerShadow
-    const getSwaggerBoxHeight = () => getAbsolutePosition($(`.swaggerBox`)[0]).height + `px`
-    $(`.swaggerBox`).css({
-      left: `${pos.left}`,
-      top: `${pos.top}`,
-      width: `${pos.width}`,
-      height: oldHeight,
-    }).removeClass(`hide`).addClass('show')
-
-    // Synchronize the size of swaggerShadow to make it as big as swaggerBox
-    $(`.swaggerShadow`).css({
-      height: getSwaggerBoxHeight()
-    })
-
-    // scroll the swagger view to the same api position
     const selStr = `.opblock-summary-${method} [data-path="${api}"]`
     const $swaggerApiDom = $(selStr)
     const $opblock = $swaggerApiDom.parents(`.opblock`) // Get the currently clicked swagger api, and it is not an expanded element
+    const getSwaggerBoxHeight = () => getAbsolutePosition($(`.swaggerBox`)[0]).height + `px`
+    const getShadowPos = () => {
+      // Get the position of swaggerShadow
+      let pos = {}
+      pos = getAbsolutePosition($(`.try .swaggerShadow`)[0])
+      pos = Object.keys(pos).reduce((prev, cur, index) => { // Add px to the number without unit, undefined when the number is 0
+        const val = pos[cur]
+        return {
+          ...prev,
+          [cur]: typeof (val) === `number` ? (val > 0 ? `${val}px` : undefined) : val,
+        }
+      }, {})
+      return pos
+    }
+
+    const pos = getShadowPos()
+    let oldHeight = pos.height ? `${pos.height}` : undefined
     if ($opblock.hasClass(`open`) === false) {
       $swaggerApiDom.click() // turn on
     }
     $opblock.addClass(`open`)
-    console.log(`selStr`, selStr)
-    $(`.swaggerBox`).scrollTo($swaggerApiDom.parent())
+
+    function renderPos() {
+      let pos = getShadowPos()
+      // Move swagger to the position of swaggerShadow
+      $(`.swaggerBox`).css({
+        left: `${pos.left}`,
+        top: `${pos.top}`,
+        width: `${pos.width}`,
+        height: oldHeight,
+      }).removeClass(`hide`).addClass('show')
+  
+      // Synchronize the size of swaggerShadow to make it as big as swaggerBox
+      $(`.swaggerShadow`).css({
+        height: getSwaggerBoxHeight()
+      })
+      // scroll the swagger view to the same api position
+      $(`.swaggerBox`).scrollTo($swaggerApiDom.parent())
+      changeFn()
+    }
     function changeFn() {
-      const pos = getAbsolutePosition($opblock[0])
-      if (pos.height === 0) {
+      const opblockPos = getAbsolutePosition($opblock[0])
+      if (opblockPos.height === 0) {
         return false; // The height is 0, no processing
       } else {
-        let newHeight = `${pos.height}px`
+        let newHeight = `${opblockPos.height}px`
         if (oldHeight !== newHeight) {
           $(`.swaggerBox`).scrollTo($swaggerApiDom.parent())
           $(`.swaggerBox`).css({
@@ -307,7 +311,8 @@ function trySwagger(cfg) {
         }
       }
     }
-    changeFn()
+    renderPos()
+    window.renderPos = renderPos
     const observer = new MutationObserver(changeFn)
     observer.disconnect()
     observer.observe($opblock[0], {
@@ -319,8 +324,7 @@ function trySwagger(cfg) {
 
   // When changing the browser window size, reset the state of swaggerBox
   $(window).resize(debounce(() => {
-    $(`.swaggerBox`).addClass(`hide`).removeClass(`show`).css({ left: 0, top: 0 })
-    $(`[data-section-id^="operation/"]`).removeClass(`try`)
+    window.renderPos()
   }, 500))
 }
 
