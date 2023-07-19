@@ -1,6 +1,6 @@
 {
   "name": "redoc-try",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "[👉 online preview](https://wll8.github.io/redoc-try/index.html)",
   "main": "dist/try.js",
   "env": {
