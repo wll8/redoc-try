@@ -189,51 +189,54 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         _fullApi$match2 = _slicedToArray(_fullApi$match, 3),
         method = _fullApi$match2[1],
         api = _fullApi$match2[2];
-
-      // Get the position of swaggerShadow
-      var pos = {};
-      window.getAbsolutePosition = getAbsolutePosition;
-      pos = getAbsolutePosition($(".try .swaggerShadow")[0]);
-      pos = Object.keys(pos).reduce(function (prev, cur, index) {
-        // Add px to the number without unit, undefined when the number is 0
-        var val = pos[cur];
-        return _objectSpread(_objectSpread({}, prev), {}, _defineProperty({}, cur, _typeof(val) === "number" ? val > 0 ? "".concat(val, "px") : undefined : val));
-      }, {});
-      var oldHeight = pos.height ? "".concat(pos.height) : undefined;
-
-      // Move swagger to the position of swaggerShadow
-      var getSwaggerBoxHeight = function getSwaggerBoxHeight() {
-        return getAbsolutePosition($(".swaggerBox")[0]).height + "px";
-      };
-      $(".swaggerBox").css({
-        left: "".concat(pos.left),
-        top: "".concat(pos.top),
-        width: "".concat(pos.width),
-        height: oldHeight
-      }).removeClass("hide").addClass('show');
-
-      // Synchronize the size of swaggerShadow to make it as big as swaggerBox
-      $(".swaggerShadow").css({
-        height: getSwaggerBoxHeight()
-      });
-
-      // scroll the swagger view to the same api position
       var selStr = ".opblock-summary-".concat(method, " [data-path=\"").concat(api, "\"]");
       var $swaggerApiDom = $(selStr);
       var $opblock = $swaggerApiDom.parents(".opblock"); // Get the currently clicked swagger api, and it is not an expanded element
+      var getSwaggerBoxHeight = function getSwaggerBoxHeight() {
+        return getAbsolutePosition($(".swaggerBox")[0]).height + "px";
+      };
+      var getShadowPos = function getShadowPos() {
+        // Get the position of swaggerShadow
+        var pos = {};
+        pos = getAbsolutePosition($(".try .swaggerShadow")[0]);
+        pos = Object.keys(pos).reduce(function (prev, cur, index) {
+          // Add px to the number without unit, undefined when the number is 0
+          var val = pos[cur];
+          return _objectSpread(_objectSpread({}, prev), {}, _defineProperty({}, cur, _typeof(val) === "number" ? val > 0 ? "".concat(val, "px") : undefined : val));
+        }, {});
+        return pos;
+      };
+      var pos = getShadowPos();
+      var oldHeight = pos.height ? "".concat(pos.height) : undefined;
       if ($opblock.hasClass("open") === false) {
         $swaggerApiDom.click(); // turn on
       }
 
       $opblock.addClass("open");
-      console.log("selStr", selStr);
-      $(".swaggerBox").scrollTo($swaggerApiDom.parent());
+      function renderPos() {
+        var pos = getShadowPos();
+        // Move swagger to the position of swaggerShadow
+        $(".swaggerBox").css({
+          left: "".concat(pos.left),
+          top: "".concat(pos.top),
+          width: "".concat(pos.width),
+          height: oldHeight
+        }).removeClass("hide").addClass('show');
+
+        // Synchronize the size of swaggerShadow to make it as big as swaggerBox
+        $(".swaggerShadow").css({
+          height: getSwaggerBoxHeight()
+        });
+        // scroll the swagger view to the same api position
+        $(".swaggerBox").scrollTo($swaggerApiDom.parent());
+        changeFn();
+      }
       function changeFn() {
-        var pos = getAbsolutePosition($opblock[0]);
-        if (pos.height === 0) {
+        var opblockPos = getAbsolutePosition($opblock[0]);
+        if (opblockPos.height === 0) {
           return false; // The height is 0, no processing
         } else {
-          var newHeight = "".concat(pos.height, "px");
+          var newHeight = "".concat(opblockPos.height, "px");
           if (oldHeight !== newHeight) {
             $(".swaggerBox").scrollTo($swaggerApiDom.parent());
             $(".swaggerBox").css({
@@ -246,7 +249,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           }
         }
       }
-      changeFn();
+      renderPos();
+      window.renderPos = renderPos;
       var observer = new MutationObserver(changeFn);
       observer.disconnect();
       observer.observe($opblock[0], {
@@ -254,15 +258,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         childList: true,
         subtree: true
       });
+      var redoc_dom = window.cfg.redocOptions[2];
+      $(redoc_dom).off('click.redoc_dom').on('click.redoc_dom', function () {
+        renderPos();
+      });
     });
 
     // When changing the browser window size, reset the state of swaggerBox
     $(window).resize(debounce(function () {
-      $(".swaggerBox").addClass("hide").removeClass("show").css({
-        left: 0,
-        top: 0
-      });
-      $("[data-section-id^=\"operation/\"]").removeClass("try");
+      window.renderPos();
     }, 500));
   }
   function loadScript(src) {
