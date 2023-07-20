@@ -250,6 +250,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         }
       }
       renderPos();
+      setTimeout(renderPos, 0);
       window.renderPos = renderPos;
       var observer = new MutationObserver(changeFn);
       observer.disconnect();
