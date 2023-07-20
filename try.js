@@ -312,6 +312,7 @@ function trySwagger(cfg) {
       }
     }
     renderPos()
+    setTimeout(renderPos, 0)
     window.renderPos = renderPos
     const observer = new MutationObserver(changeFn)
     observer.disconnect()
