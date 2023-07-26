@@ -257,7 +257,7 @@ function trySwagger(cfg) {
     const getShadowPos = () => {
       // Get the position of swaggerShadow
       let pos = {}
-      pos = getAbsolutePosition($(`.try .swaggerShadow`)[0])
+      pos = getAbsolutePosition($(`.try .swaggerShadow`)[0]) || {}
       pos = Object.keys(pos).reduce((prev, cur, index) => { // Add px to the number without unit, undefined when the number is 0
         const val = pos[cur]
         return {
