@@ -1,6 +1,17 @@
 ;((window, undefined) => {
 window.initTry = window.initTry || initTry
 
+/**
+
+global variable:
+
+window.initTry
+window.initTry.cfg
+window.initTry.renderPos
+window.initTry.$operation
+
+*/
+
 function initTry(userCfg) {
   loadScript(`https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js`)
     .then(() => loadScript(`https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`))
@@ -217,6 +228,7 @@ function trySwagger(cfg) {
     const $tryBtn = $(this)
     $(`.swaggerShadow`).remove() // First clear all temporary elements
     const $operation = $tryBtn.parents(`[data-section-id]`).last() // Get the outermost api box
+    window.initTry.$operation = $operation
     if ($operation.hasClass(`try`) === true) { // If the current API is already in the try state, uninstall and exit the function
       $(`.swaggerBox`).addClass(`hide`).removeClass(`show`)
       $operation.removeClass(`try`)
@@ -324,6 +336,10 @@ function trySwagger(cfg) {
     const redoc_dom = window.initTry.cfg.redocOptions[2]
     $(redoc_dom).off('click.redoc_dom').on('click.redoc_dom', () => {
       renderPos()
+      if(isVisible(document.querySelector(`.try .fullApiBox`)) === false) {
+        $(`.swaggerBox`).addClass(`hide`).removeClass(`show`)
+        window.initTry.$operation.removeClass(`try`)
+      }
     })
   })
 
@@ -331,6 +347,28 @@ function trySwagger(cfg) {
   $(window).resize(debounce(() => {
     window.initTry.renderPos()
   }, 500))
+}
+
+function isVisible(element) {
+  let isVisible = true
+  let parentElement = element
+  
+  while (parentElement) {
+    const parentStyle = getComputedStyle(parentElement)
+    
+    if (
+      false
+      || parentStyle.display === 'none'
+      || parentStyle.visibility === 'hidden'
+      || parentStyle.opacity === '0' || parentStyle.opacity === '0.0'
+    ) {
+      isVisible = false
+      break
+    }
+    
+    parentElement = parentElement.offsetParent
+  }
+  return isVisible
 }
 
 function loadScript(src) {
