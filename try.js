@@ -8,7 +8,7 @@ function initTry(userCfg) {
     .then(() => loadScript(`https://cdn.jsdelivr.net/npm/compare-versions@3.6.0/index.min.js`))
     .then(() => {
       const cfg = cfgHandle(userCfg)
-      window.cfg = cfg
+      window.initTry.cfg = cfg
       if(cfg.onlySwagger) {
         initSwagger(cfg.swaggerOptions)
         $(`.swaggerBox`).addClass(`onlySwagger`)
@@ -228,7 +228,7 @@ function trySwagger(cfg) {
     // The following 3 lines add class names to some necessary elements to facilitate acquisition or identification
     $(`.try>div>div:nth-child(2)`).addClass(`apiBlock`)
     $(`.try .apiBlock>div:nth-child(1)`).addClass(`fullApiBox`)
-    if(window.cfg.redocVersion !== 'next' && window.compareVersions.compare(window.cfg.redocVersion, `2.0.0-rc.32`, `<=`)) {
+    if(window.initTry.cfg.redocVersion !== 'next' && window.compareVersions.compare(window.initTry.cfg.redocVersion, `2.0.0-rc.32`, `<=`)) {
       $(`.try .apiBlock>div>div:nth-child(1)`).addClass(`fullApi`)
     } else {
       $(`.try .apiBlock>div>button`).addClass(`fullApi`)
@@ -313,7 +313,7 @@ function trySwagger(cfg) {
     }
     renderPos()
     setTimeout(renderPos, 0)
-    window.renderPos = renderPos
+    window.initTry.renderPos = renderPos
     const observer = new MutationObserver(changeFn)
     observer.disconnect()
     observer.observe($opblock[0], {
@@ -321,7 +321,7 @@ function trySwagger(cfg) {
       childList: true,
       subtree: true,
     })
-    const redoc_dom = window.cfg.redocOptions[2]
+    const redoc_dom = window.initTry.cfg.redocOptions[2]
     $(redoc_dom).off('click.redoc_dom').on('click.redoc_dom', () => {
       renderPos()
     })
@@ -329,7 +329,7 @@ function trySwagger(cfg) {
 
   // When changing the browser window size, reset the state of swaggerBox
   $(window).resize(debounce(() => {
-    window.renderPos()
+    window.initTry.renderPos()
   }, 500))
 }
 
