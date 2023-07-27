@@ -19,6 +19,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 ;
 (function (window, undefined) {
   window.initTry = window.initTry || initTry;
+
+  /**
+  
+  global variable:
+  
+  window.initTry
+  window.initTry.cfg
+  window.initTry.renderPos
+  window.initTry.$operation
+  
+  */
+
   function initTry(userCfg) {
     loadScript("https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js").then(function () {
       return loadScript("https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js");
@@ -28,7 +40,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       return loadScript("https://cdn.jsdelivr.net/npm/compare-versions@3.6.0/index.min.js");
     }).then(function () {
       var cfg = cfgHandle(userCfg);
-      window.cfg = cfg;
+      window.initTry.cfg = cfg;
       if (cfg.onlySwagger) {
         initSwagger(cfg.swaggerOptions);
         $(".swaggerBox").addClass("onlySwagger");
@@ -150,6 +162,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var $tryBtn = $(this);
       $(".swaggerShadow").remove(); // First clear all temporary elements
       var $operation = $tryBtn.parents("[data-section-id]").last(); // Get the outermost api box
+      window.initTry.$operation = $operation;
       if ($operation.hasClass("try") === true) {
         // If the current API is already in the try state, uninstall and exit the function
         $(".swaggerBox").addClass("hide").removeClass("show");
@@ -162,7 +175,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       // The following 3 lines add class names to some necessary elements to facilitate acquisition or identification
       $(".try>div>div:nth-child(2)").addClass("apiBlock");
       $(".try .apiBlock>div:nth-child(1)").addClass("fullApiBox");
-      if (window.cfg.redocVersion !== 'next' && window.compareVersions.compare(window.cfg.redocVersion, "2.0.0-rc.32", "<=")) {
+      if (window.initTry.cfg.redocVersion !== 'next' && window.compareVersions.compare(window.initTry.cfg.redocVersion, "2.0.0-rc.32", "<=")) {
         $(".try .apiBlock>div>div:nth-child(1)").addClass("fullApi");
       } else {
         $(".try .apiBlock>div>button").addClass("fullApi");
@@ -198,7 +211,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var getShadowPos = function getShadowPos() {
         // Get the position of swaggerShadow
         var pos = {};
-        pos = getAbsolutePosition($(".try .swaggerShadow")[0]);
+        pos = getAbsolutePosition($(".try .swaggerShadow")[0]) || {};
         pos = Object.keys(pos).reduce(function (prev, cur, index) {
           // Add px to the number without unit, undefined when the number is 0
           var val = pos[cur];
@@ -251,7 +264,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
       renderPos();
       setTimeout(renderPos, 0);
-      window.renderPos = renderPos;
+      window.initTry.renderPos = renderPos;
       var observer = new MutationObserver(changeFn);
       observer.disconnect();
       observer.observe($opblock[0], {
@@ -259,16 +272,33 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         childList: true,
         subtree: true
       });
-      var redoc_dom = window.cfg.redocOptions[2];
+      var redoc_dom = window.initTry.cfg.redocOptions[2];
       $(redoc_dom).off('click.redoc_dom').on('click.redoc_dom', function () {
         renderPos();
+        if (isVisible(document.querySelector(".try .fullApiBox")) === false) {
+          $(".swaggerBox").addClass("hide").removeClass("show");
+          window.initTry.$operation.removeClass("try");
+        }
       });
     });
 
     // When changing the browser window size, reset the state of swaggerBox
     $(window).resize(debounce(function () {
-      window.renderPos();
+      window.initTry.renderPos();
     }, 500));
+  }
+  function isVisible(element) {
+    var isVisible = true;
+    var parentElement = element;
+    while (parentElement) {
+      var parentStyle = getComputedStyle(parentElement);
+      if (false || parentStyle.display === 'none' || parentStyle.visibility === 'hidden' || parentStyle.opacity === '0' || parentStyle.opacity === '0.0') {
+        isVisible = false;
+        break;
+      }
+      parentElement = parentElement.offsetParent;
+    }
+    return isVisible;
   }
   function loadScript(src) {
     return new Promise(function (resolve, reject) {
