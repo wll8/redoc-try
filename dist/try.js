@@ -35,7 +35,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     loadScript("https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js").then(function () {
       return loadScript("https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js");
     }).then(function () {
-      return loadScript("https://cdn.jsdelivr.net/npm/swagger-ui-dist@3.48.0/swagger-ui-bundle.js");
+      return loadScript("https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js");
     }).then(function () {
       return loadScript("https://cdn.jsdelivr.net/npm/compare-versions@3.6.0/index.min.js");
     }).then(function () {
@@ -123,7 +123,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     // dom
     $('body').append("\n    <div class=\"swaggerBox\">\n      <div id=\"swagger-ui\"></div>\n    </div>\n  ");
     // swagger-ui.css
-    $('head').append("<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@3.25.1/swagger-ui.css\" />");
+    $('head').append("<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css\" />");
     SwaggerUIBundle(swaggerOptions);
   }
   function trySwagger(cfg) {
@@ -288,6 +288,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }, 500));
   }
   function isVisible(element) {
+    if (!element) {
+      return false;
+    }
     var isVisible = true;
     var parentElement = element;
     while (parentElement) {
