@@ -290,6 +290,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }, 500));
   }
   function isVisible(element) {
+    if (!element) {
+      return false;
+    }
     var isVisible = true;
     var parentElement = element;
     while (parentElement) {
