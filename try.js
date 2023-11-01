@@ -287,15 +287,18 @@ function trySwagger(cfg) {
     }
     $opblock.addClass(`open`)
 
-    function renderPos() {
+    function renderPos(onlyWhenVisible) {
       let pos = getShadowPos()
-      // Move swagger to the position of swaggerShadow
-      $(`.swaggerBox`).css({
-        left: `${pos.left}`,
-        top: `${pos.top}`,
-        width: `${pos.width}`,
-        height: oldHeight,
-      }).removeClass(`hide`).addClass('show')
+
+      if (!onlyWhenVisible || $(".swaggerBox").hasClass("show")) {
+        // Move swagger to the position of swaggerShadow
+        $(`.swaggerBox`).css({
+          left: `${pos.left}`,
+          top: `${pos.top}`,
+          width: `${pos.width}`,
+          height: oldHeight,
+        }).removeClass(`hide`).addClass('show')
+      }
   
       // Synchronize the size of swaggerShadow to make it as big as swaggerBox
       $(`.swaggerShadow`).css({
@@ -345,7 +348,7 @@ function trySwagger(cfg) {
 
   // When changing the browser window size, reset the state of swaggerBox
   $(window).resize(debounce(() => {
-    window.initTry.renderPos()
+    window.initTry.renderPos(true)
   }, 500))
 }
 
