@@ -157,7 +157,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     // Add try button
     $(".http-verb").before("\n    <button class=\"tryBtn\">".concat(cfg.tryText, "</button>\n  "));
-    $(".tryBtn").click(function (event) {
+    $(".tryBtn").css({
+      lineHeight: '20px',
+      marginRight: '7px'
+    }).click(function (event) {
       event.stopPropagation();
       var $tryBtn = $(this);
       $(".swaggerShadow").remove(); // First clear all temporary elements

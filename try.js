@@ -223,7 +223,10 @@ function trySwagger(cfg) {
   $(`.http-verb`).before(`
     <button class="tryBtn">${cfg.tryText}</button>
   `)
-  $(`.tryBtn`).click(function (event) {
+  $(`.tryBtn`).css({
+    lineHeight: '20px',
+    marginRight: '7px',
+  }).click(function (event) {
     event.stopPropagation()
     const $tryBtn = $(this)
     $(`.swaggerShadow`).remove() // First clear all temporary elements
