@@ -350,6 +350,10 @@ function trySwagger(cfg) {
 }
 
 function isVisible(element) {
+  if (!element) {
+    return false
+  }
+
   let isVisible = true
   let parentElement = element
   
