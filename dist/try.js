@@ -190,9 +190,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       if (cfg.trySwaggerInApi === true) {
         appendSwaggerShadow();
       } else {
-        var requestSel = ".try .apiBlock h3";
-        $(requestSel).parent().addClass("reqBox");
-        if ($(requestSel).length && $(requestSel).text().includes("Request")) {
+        var requestOrResponseSel = ".try .apiBlock h3";
+        $(requestOrResponseSel).parent().addClass("reqBox");
+        if ($(requestOrResponseSel).length && ($(requestOrResponseSel).text().includes("Request") || $(requestOrResponseSel).text().includes("Response"))) {
           $(".try .reqBox").append("<div class=\"swaggerShadow\"></div>");
         } else {
           appendSwaggerShadow();
