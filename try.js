@@ -253,9 +253,9 @@ function trySwagger(cfg) {
     if (cfg.trySwaggerInApi === true) {
       appendSwaggerShadow()
     } else {
-      const requestSel = `.try .apiBlock h3`
-      $(requestSel).parent().addClass(`reqBox`)
-      if ($(requestSel).length && $(requestSel).text().includes(`Request`)) {
+      const requestOrResponseSel = `.try .apiBlock h3`
+      $(requestOrResponseSel).parent().addClass(`reqBox`)
+      if ($(requestOrResponseSel).length && ($(requestOrResponseSel).text().includes(`Request`) || $(requestOrResponseSel).text().includes(`Response`))) {
         $(`.try .reqBox`).append(`<div class="swaggerShadow"></div>`)
       } else {
         appendSwaggerShadow()
