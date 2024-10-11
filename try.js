@@ -1,3 +1,4 @@
+import cssText from './style.less?inline';
 ;((window, undefined) => {
 window.initTry = window.initTry || initTry
 
@@ -13,13 +14,13 @@ window.initTry.$operation
 */
 
 function initTry(userCfg) {
-  loadScript(`https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js`)
-    .then(() => loadScript(`https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js`))
-    .then(() => loadScript(`https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js`))
-    .then(() => loadScript(`https://cdn.jsdelivr.net/npm/compare-versions@3.6.0/index.min.js`))
+  const cfg = cfgHandle(userCfg)
+  window.initTry.cfg = cfg
+  loadScript(`${cfg.cndPrefix}jquery@3.6.0/dist/jquery.min.js`)
+    .then(() => loadScript(`${cfg.cndPrefix}jquery.scrollto@2.1.2/jquery.scrollTo.min.js`))
+    .then(() => loadScript(`${cfg.cndPrefix}swagger-ui-dist@5/swagger-ui-bundle.js`))
+    .then(() => loadScript(`${cfg.cndPrefix}compare-versions@3.6.0/index.min.js`))
     .then(() => {
-      const cfg = cfgHandle(userCfg)
-      window.initTry.cfg = cfg
       if(cfg.onlySwagger) {
         initSwagger(cfg.swaggerOptions)
         $(`.swaggerBox`).addClass(`onlySwagger`)
@@ -41,11 +42,13 @@ function cfgHandle(userCfg) {
   const testOpenApi = `https://httpbin.org/spec.json` // `https://petstore.swagger.io/v2/swagger.json`
   const redocOptionsRes = dataType(redocOptions, `object`) ? [undefined, redocOptions] : (redocOptions || [])
   const [redoc_openApi, redoc_options, redoc_dom, redoc_callBack] = redocOptionsRes
-  const redocVersion = ( // Read the redoc version number from the label
-    (
-      $(`script[src*="/redoc@"]`).attr(`src`) || ``
-    ).match(/redoc@(.+?)\//) || []
-  )[1]
+  const redocVersion = () => {
+    return userCfg.redocVersion || ( // Read the redoc version number from the label
+      (
+        $(`script[src*="/redoc@"]`).attr(`src`) || ``
+      ).match(/redoc@(.+?)\//) || []
+    )[1]
+  }
   if(typeof(userCfg.openApi) === `object`) {
     const { openApi } = userCfg
     const blob = new Blob([JSON.stringify(openApi)], {type: `application/json`})
@@ -54,22 +57,23 @@ function cfgHandle(userCfg) {
     userCfg._openApiJSON = openApi
   }
   const cfg = {
+    cndPrefix: `https://cdn.jsdelivr.net/npm/`,
     openApi: testOpenApi,
     onlySwagger: false, // Only render swagger, in some cases redoc will render openApi error
     tryText: `try`, // try button text
     trySwaggerInApi: true, // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window
-    redocVersion,
-    authBtnPosSelector: `h1:eq(0)`,
-    authBtnText: `AUTHORIZE`,
+    cfgBtnPosSelector: `h1:eq(0)`,
+    cfgBtnText: `Swagger configuration`,
     pure: false, // Concise mode, hide some existing elements of redoc
 
     ...userCfg,
+    redocVersion,
     swaggerOptions: {
       url: userCfg.openApi || testOpenApi,
       dom_id: `#swagger-ui`,
       onComplete: () => {
         if(Boolean(cfg.onlySwagger) === false) {
-          trySwagger(cfg)
+          onComplete(cfg)
         }
       },
       tryItOutEnabled: true,
@@ -94,89 +98,7 @@ function initCss() {
   // reset swagger-ui css
   $('head').append(`
     <style>
-      /* Set the position of swaggerBox with body as the relative element */
-      body {
-        position: relative;
-      }
-      @media print, screen and (max-width: 85rem) {
-        .eIeJha,
-        .dtUibw {
-          padding: 4px;
-        }
-      }
-
-      .swaggerBox.hide {
-        visibility: hidden;
-        cursor: none;
-        width: 0;
-        height: 0;
-      }
-      .swaggerBox.show {
-        visibility: visible;
-        cursor: initial;
-      }
-
-      /* Reset the style of swagger-ui */
-      .swaggerBox .swagger-ui .wrapper {
-        padding: 0;
-      }
-      .swaggerBox .swagger-ui .download-contents {
-        top: -10px;
-        right: 0;
-        width: initial;
-      }
-
-      /* Disable api bar to avoid problems */
-      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock .opblock-summary {
-        cursor: not-allowed;
-        pointer-events: none;
-      }
-
-      /* Disable the api bar, but exclude the authorization button */
-      .swaggerBox .swagger-ui .authorization__btn {
-        cursor: initial;
-        pointer-events: initial;
-      }
-
-      .swaggerBox {
-        border-radius: 4px;
-        background-color: #fff;
-        width: 100%;
-        height: 100vh;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
-      }
-      .swaggerBox:not(.onlySwagger) {
-        overflow: hidden;
-      }
-      /* Hide some disturbing elements */
-      .swaggerBox.pure:not(.onlySwagger) .swagger-ui .opblock-summary {
-        visibility: hidden;
-        padding: 0;
-      }
-      .swaggerBox.pure:not(.onlySwagger) .opblock-section thead,
-      .swaggerBox.pure:not(.onlySwagger) .swagger-ui .opblock-summary * {
-        display: none;
-      }
-
-      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock .opblock-section-header,
-      .swaggerBox:not(.onlySwagger) .btn.cancel,
-      .swaggerBox:not(.onlySwagger) .try-out,
-      .swaggerBox:not(.onlySwagger) .responses-inner>div>h4,
-      .swaggerBox:not(.onlySwagger) :not(.live-responses-table).responses-table,
-      .swaggerBox:not(.onlySwagger) .opblock-body > .opblock-description-wrapper {
-        display: none;
-      }
-      .swaggerBox:not(.onlySwagger) .block div>span:last-child .operation-tag-content>span:last-child {
-        display: block;
-        margin-bottom: 100vh;
-      }
-      .swaggerBox .tryBtn {
-        margin-right: 10px;
-        background-color: #fff;
-      }
+      ${cssText}
     </style>
   `)
 }
@@ -189,33 +111,48 @@ function initSwagger(swaggerOptions) {
     </div>
   `)
   // swagger-ui.css
-  $('head').append(`<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css" />`)
+  $('head').append(`<link rel="stylesheet" href="${window.initTry.cfg.cndPrefix}swagger-ui-dist@5/swagger-ui.css" />`)
   SwaggerUIBundle(swaggerOptions)
 }
 
-function trySwagger(cfg) {
+/**
+ * Display a part of the box as a pop-up window
+ * @param {*} $box Box
+ * @param {*} $ref The selector to display
+ */
+async function popUps($box, $ref) {
+  return new Promise(async (resolve, reject) => {
+    await sleep(100)
+    $box.removeClass(`hide`).removeClass(`show`).attr(`style`, ``).css({
+      // overflow: `initial`
+    })
+    $box.addClass(getClassName(`modal-box`))
+    $ref.addClass(getClassName(`modal-relative`))
+    const fn = function(event) {
+      const content = window.getComputedStyle(event.target, '::before').getPropertyValue('content') 
+      if(`"modal-box"` === content) {
+        $box.removeClass(getClassName(`modal-box`))
+        $ref.removeClass(getClassName(`modal-relative`))
+        
+        $(`body`).off('click', fn);
+        resolve()
+      }
+    }
+    await sleep(500)
+    $(`body`).on('click', fn);
+  })
+}
+
+function onComplete(cfg) {
   { // Add a button to set auth to redoc
-    $(cfg.authBtnPosSelector).after($(`
-      <div class="${$(`a[download]:eq(0)`).attr(`class`)} btn setAuth">` + cfg.authBtnText + `</div>
+    $(cfg.cfgBtnPosSelector).after($(`
+      <div class="${$(`a[download]:eq(0)`).attr(`class`)} btn setAuth">` + cfg.cfgBtnText + `</div>
     `))
-    $(`.btn.setAuth`).click(() => {
+    $(`.btn.setAuth`).click(async () => {
       // The pop-up window in swaggerBox can be displayed, but the swaggerBox itself is hidden
       const $swaggerBox = $(`.swaggerBox`)
-        .removeClass(`hide`)
-        .css({
-          visibility: `hidden`,
-          height: ``,
-          left: ``,
-          top: ``,
-          width: ``,
-        })
-      $(`.swagger-ui .auth-wrapper .authorize.unlocked`).click() // Open the pop-up window for setting auth
-      const $modal = $(`.swagger-ui .dialog-ux .modal-ux`)
-      $modal.css({ visibility: `visible` })
-      $(`.swagger-ui .auth-btn-wrapper .btn-done, .swagger-ui .dialog-ux .modal-ux-header .close-modal`).click(() => {
-        $swaggerBox.addClass(`hide`).css({ visibility: `` })
-        $modal.css({ visibility: `` })
-      });
+      await popUps($swaggerBox, $(`.swagger-ui .scheme-container`))
+      $swaggerBox.addClass(`hide`)
     })
   }
 
@@ -243,7 +180,7 @@ function trySwagger(cfg) {
     // The following 3 lines add class names to some necessary elements to facilitate acquisition or identification
     $(`.try>div>div:nth-child(2)`).addClass(`apiBlock`)
     $(`.try .apiBlock>div:nth-child(1)`).addClass(`fullApiBox`)
-    if(window.initTry.cfg.redocVersion !== 'next' && window.compareVersions.compare(window.initTry.cfg.redocVersion, `2.0.0-rc.32`, `<=`)) {
+    if(window.initTry.cfg.redocVersion() !== 'next' && window.compareVersions.compare(window.initTry.cfg.redocVersion(), `2.0.0-rc.32`, `<=`)) {
       $(`.try .apiBlock>div>div:nth-child(1)`).addClass(`fullApi`)
     } else {
       $(`.try .apiBlock>div>button`).addClass(`fullApi`)
@@ -424,5 +361,13 @@ function getAbsolutePosition(domObj) { // Get element position and size
 function dataType(data, type) {
   const dataType = Object.prototype.toString.call(data).match(/\s(.+)]/)[1].toLowerCase()
   return type ? (dataType === type.toLowerCase()) : dataType
+}
+
+async function sleep(time = 100) {
+  return new Promise(resolve => setTimeout(resolve, time))
+}
+
+function getClassName(name = ``) {
+  return `redoc-try-${name}`
 }
 })(window);

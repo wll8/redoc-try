@@ -1,0 +1,105 @@
+@prefix: redoc-try-;
+
+/* Set the position of swaggerBox with body as the relative element */
+body {
+  position: relative;
+}
+
+.@{prefix} {
+  &modal-box {
+    background-color: #ccc;
+    visibility: hidden;
+    height: initial;
+    left: initial;
+    top: initial;
+    width: initial;
+    &::before {
+      content: 'modal-box';
+      visibility: visible;
+      position: absolute;
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      left: 0;
+      top: 0;
+      font-size: 0;
+    }
+  }
+  &modal-relative {
+    position: relative;
+    visibility: visible;
+  }
+}
+
+.swaggerBox.hide {
+  visibility: hidden;
+  cursor: none;
+  width: 0;
+  height: 0;
+}
+.swaggerBox.show {
+  visibility: visible;
+  cursor: initial;
+}
+
+/* Reset the style of swagger-ui */
+.swaggerBox .swagger-ui .wrapper {
+  padding: 0;
+}
+.swaggerBox .swagger-ui .download-contents {
+  top: -10px;
+  right: 0;
+  width: initial;
+}
+
+/* Disable api bar to avoid problems */
+.swaggerBox:not(.@{prefix}modal-box) .swagger-ui .opblock .opblock-summary {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Disable the api bar, but exclude the authorization button */
+.swaggerBox .swagger-ui .authorization__btn {
+  cursor: initial;
+  pointer-events: initial;
+}
+
+.swaggerBox {
+  border-radius: 4px;
+  background-color: #fff;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+.swaggerBox:not(.@{prefix}modal-box) {
+  overflow: hidden;
+}
+/* Hide some disturbing elements */
+.swaggerBox.pure:not(.@{prefix}modal-box) .swagger-ui .opblock-summary {
+  visibility: hidden;
+  padding: 0;
+}
+.swaggerBox.pure:not(.@{prefix}modal-box) .opblock-section thead,
+.swaggerBox.pure:not(.@{prefix}modal-box) .swagger-ui .opblock-summary * {
+  display: none;
+}
+
+.swaggerBox:not(.@{prefix}modal-box) .swagger-ui .opblock .opblock-section-header,
+.swaggerBox:not(.@{prefix}modal-box) .btn.cancel,
+.swaggerBox:not(.@{prefix}modal-box) .try-out,
+.swaggerBox:not(.@{prefix}modal-box) .responses-inner>div>h4,
+.swaggerBox:not(.@{prefix}modal-box) :not(.live-responses-table).responses-table,
+.swaggerBox:not(.@{prefix}modal-box) .opblock-body > .opblock-description-wrapper {
+  display: none;
+}
+.swaggerBox:not(.@{prefix}modal-box) .block div>span:last-child .operation-tag-content>span:last-child {
+  display: block;
+  margin-bottom: 100vh;
+}
+.swaggerBox .tryBtn {
+  margin-right: 10px;
+  background-color: #fff;
+}

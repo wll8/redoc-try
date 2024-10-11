@@ -1,361 +1,201 @@
-"use strict";
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-;
-(function (window, undefined) {
-  window.initTry = window.initTry || initTry;
-
-  /**
-  
-  global variable:
-  
-  window.initTry
-  window.initTry.cfg
-  window.initTry.renderPos
-  window.initTry.$operation
-  
-  */
-
-  function initTry(userCfg) {
-    loadScript("https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js").then(function () {
-      return loadScript("https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js");
-    }).then(function () {
-      return loadScript("https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js");
-    }).then(function () {
-      return loadScript("https://cdn.jsdelivr.net/npm/compare-versions@3.6.0/index.min.js");
-    }).then(function () {
-      var cfg = cfgHandle(userCfg);
-      window.initTry.cfg = cfg;
-      if (cfg.onlySwagger) {
-        initSwagger(cfg.swaggerOptions);
-        $(".swaggerBox").addClass("onlySwagger");
-      } else {
-        var _Redoc;
-        (_Redoc = Redoc).init.apply(_Redoc, _toConsumableArray(cfg.redocOptions));
-      }
-      initCss();
-    })["catch"](function () {
-      console.error('Something went wrong.');
+const z = 'body{position:relative}.redoc-try-modal-box{background-color:#ccc;visibility:hidden;height:initial;left:initial;top:initial;width:initial}.redoc-try-modal-box:before{content:"modal-box";visibility:visible;position:absolute;width:100%;height:100vh;background-color:#00000080;left:0;top:0;font-size:0}.redoc-try-modal-relative{position:relative;visibility:visible}.swaggerBox.hide{visibility:hidden;cursor:none;width:0;height:0}.swaggerBox.show{visibility:visible;cursor:initial}.swaggerBox .swagger-ui .wrapper{padding:0}.swaggerBox .swagger-ui .download-contents{top:-10px;right:0;width:initial}.swaggerBox:not(.redoc-try-modal-box) .swagger-ui .opblock .opblock-summary{cursor:not-allowed;pointer-events:none}.swaggerBox .swagger-ui .authorization__btn{cursor:initial;pointer-events:initial}.swaggerBox{border-radius:4px;background-color:#fff;width:100%;height:100vh;position:absolute;top:0;left:0;z-index:1}.swaggerBox:not(.redoc-try-modal-box){overflow:hidden}.swaggerBox.pure:not(.redoc-try-modal-box) .swagger-ui .opblock-summary{visibility:hidden;padding:0}.swaggerBox.pure:not(.redoc-try-modal-box) .opblock-section thead,.swaggerBox.pure:not(.redoc-try-modal-box) .swagger-ui .opblock-summary *{display:none}.swaggerBox:not(.redoc-try-modal-box) .swagger-ui .opblock .opblock-section-header,.swaggerBox:not(.redoc-try-modal-box) .btn.cancel,.swaggerBox:not(.redoc-try-modal-box) .try-out,.swaggerBox:not(.redoc-try-modal-box) .responses-inner>div>h4,.swaggerBox:not(.redoc-try-modal-box) :not(.live-responses-table).responses-table,.swaggerBox:not(.redoc-try-modal-box) .opblock-body>.opblock-description-wrapper{display:none}.swaggerBox:not(.redoc-try-modal-box) .block div>span:last-child .operation-tag-content>span:last-child{display:block;margin-bottom:100vh}.swaggerBox .tryBtn{margin-right:10px;background-color:#fff}';
+((s, x) => {
+  s.initTry = s.initTry || _;
+  function _(e) {
+    const t = q(e);
+    s.initTry.cfg = t, p(`${t.cndPrefix}jquery@3.6.0/dist/jquery.min.js`).then(() => p(`${t.cndPrefix}jquery.scrollto@2.1.2/jquery.scrollTo.min.js`)).then(() => p(`${t.cndPrefix}swagger-ui-dist@5/swagger-ui-bundle.js`)).then(() => p(`${t.cndPrefix}compare-versions@3.6.0/index.min.js`)).then(() => {
+      t.onlySwagger ? (k(t.swaggerOptions), $(".swaggerBox").addClass("onlySwagger")) : Redoc.init(...t.redocOptions), j();
+    }).catch(() => {
+      console.error("Something went wrong.");
     });
   }
-  function cfgHandle(userCfg) {
-    if (_typeof(userCfg) === "string") {
-      userCfg = {
-        openApi: userCfg
-      };
+  function q(e) {
+    typeof e == "string" && (e = { openApi: e });
+    const { redocOptions: t } = e, r = "https://httpbin.org/spec.json", o = R(t, "object") ? [x, t] : t || [], [n, l, g, u] = o, v = () => e.redocVersion || // Read the redoc version number from the label
+    (($('script[src*="/redoc@"]').attr("src") || "").match(/redoc@(.+?)\//) || [])[1];
+    if (typeof e.openApi == "object") {
+      const { openApi: d } = e, y = new Blob([JSON.stringify(d)], { type: "application/json" }), f = URL.createObjectURL(y);
+      e.openApi = f, e._openApiJSON = d;
     }
-    var _userCfg = userCfg,
-      redocOptions = _userCfg.redocOptions;
-    var testOpenApi = "https://httpbin.org/spec.json"; // `https://petstore.swagger.io/v2/swagger.json`
-    var redocOptionsRes = dataType(redocOptions, "object") ? [undefined, redocOptions] : redocOptions || [];
-    var _redocOptionsRes = _slicedToArray(redocOptionsRes, 4),
-      redoc_openApi = _redocOptionsRes[0],
-      redoc_options = _redocOptionsRes[1],
-      redoc_dom = _redocOptionsRes[2],
-      redoc_callBack = _redocOptionsRes[3];
-    var redocVersion = (
-    // Read the redoc version number from the label
-    ($("script[src*=\"/redoc@\"]").attr("src") || "").match(/redoc@(.+?)\//) || [])[1];
-    if (_typeof(userCfg.openApi) === "object") {
-      var _userCfg2 = userCfg,
-        openApi = _userCfg2.openApi;
-      var blob = new Blob([JSON.stringify(openApi)], {
-        type: "application/json"
-      });
-      var url = URL.createObjectURL(blob);
-      userCfg.openApi = url;
-      userCfg._openApiJSON = openApi;
-    }
-    var cfg = _objectSpread(_objectSpread({
-      openApi: testOpenApi,
-      onlySwagger: false,
+    const a = {
+      cndPrefix: "https://cdn.jsdelivr.net/npm/",
+      openApi: r,
+      onlySwagger: !1,
       // Only render swagger, in some cases redoc will render openApi error
       tryText: "try",
       // try button text
-      trySwaggerInApi: true,
+      trySwaggerInApi: !0,
       // Is the swagger debugging window displayed under the api? true: yes, false: displayed after the request, when the request is relatively large, you may not see the debugging window
-      redocVersion: redocVersion,
-      authBtnPosSelector: "h1:eq(0)",
-      authBtnText: "AUTHORIZE",
-      pure: false
-    }, userCfg), {}, {
-      swaggerOptions: _objectSpread({
-        url: userCfg.openApi || testOpenApi,
+      cfgBtnPosSelector: "h1:eq(0)",
+      cfgBtnText: "Swagger configuration",
+      pure: !1,
+      // Concise mode, hide some existing elements of redoc
+      ...e,
+      redocVersion: v,
+      swaggerOptions: {
+        url: e.openApi || r,
         dom_id: "#swagger-ui",
-        onComplete: function onComplete() {
-          if (Boolean(cfg.onlySwagger) === false) {
-            trySwagger(cfg);
-          }
+        onComplete: () => {
+          a.onlySwagger || V(a);
         },
-        tryItOutEnabled: true
-      }, userCfg.swaggerOptions),
-      redocOptions: [redoc_openApi || userCfg._openApiJSON || userCfg.openApi || testOpenApi, redoc_options || {
-        enableConsole: true
-      }, redoc_dom || document.getElementById('redoc-container'), function () {
-        redoc_callBack && redoc_callBack();
-        initSwagger(cfg.swaggerOptions);
-        $(".swaggerBox").addClass("hide");
-        cfg.pure && $(".swaggerBox").addClass("pure");
-      }]
-    });
-    return cfg;
-  }
-  function initCss() {
-    // reset swagger-ui css
-    $('head').append("\n    <style>\n      /* Set the position of swaggerBox with body as the relative element */\n      body {\n        position: relative;\n      }\n      @media print, screen and (max-width: 85rem) {\n        .eIeJha,\n        .dtUibw {\n          padding: 4px;\n        }\n      }\n\n      .swaggerBox.hide {\n        visibility: hidden;\n        cursor: none;\n        width: 0;\n        height: 0;\n      }\n      .swaggerBox.show {\n        visibility: visible;\n        cursor: initial;\n      }\n\n      /* Reset the style of swagger-ui */\n      .swaggerBox .swagger-ui .wrapper {\n        padding: 0;\n      }\n      .swaggerBox .swagger-ui .download-contents {\n        top: -10px;\n        right: 0;\n        width: initial;\n      }\n\n      /* Disable api bar to avoid problems */\n      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock .opblock-summary {\n        cursor: not-allowed;\n        pointer-events: none;\n      }\n\n      /* Disable the api bar, but exclude the authorization button */\n      .swaggerBox .swagger-ui .authorization__btn {\n        cursor: initial;\n        pointer-events: initial;\n      }\n\n      .swaggerBox {\n        border-radius: 4px;\n        background-color: #fff;\n        width: 100%;\n        height: 100vh;\n        position: absolute;\n        top: 0;\n        left: 0;\n        z-index: 1;\n      }\n      .swaggerBox:not(.onlySwagger) {\n        overflow: hidden;\n      }\n      /* Hide some disturbing elements */\n      .swaggerBox.pure:not(.onlySwagger) .swagger-ui .opblock-summary {\n        visibility: hidden;\n        padding: 0;\n      }\n      .swaggerBox.pure:not(.onlySwagger) .opblock-section thead,\n      .swaggerBox.pure:not(.onlySwagger) .swagger-ui .opblock-summary * {\n        display: none;\n      }\n\n      .swaggerBox:not(.onlySwagger) .swagger-ui .opblock .opblock-section-header,\n      .swaggerBox:not(.onlySwagger) .btn.cancel,\n      .swaggerBox:not(.onlySwagger) .try-out,\n      .swaggerBox:not(.onlySwagger) .responses-inner>div>h4,\n      .swaggerBox:not(.onlySwagger) :not(.live-responses-table).responses-table,\n      .swaggerBox:not(.onlySwagger) .opblock-body > .opblock-description-wrapper {\n        display: none;\n      }\n      .swaggerBox:not(.onlySwagger) .block div>span:last-child .operation-tag-content>span:last-child {\n        display: block;\n        margin-bottom: 100vh;\n      }\n      .swaggerBox .tryBtn {\n        margin-right: 10px;\n        background-color: #fff;\n      }\n    </style>\n  ");
-  }
-  function initSwagger(swaggerOptions) {
-    // dom
-    $('body').append("\n    <div class=\"swaggerBox\">\n      <div id=\"swagger-ui\"></div>\n    </div>\n  ");
-    // swagger-ui.css
-    $('head').append("<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css\" />");
-    SwaggerUIBundle(swaggerOptions);
-  }
-  function trySwagger(cfg) {
-    {
-      // Add a button to set auth to redoc
-      $(cfg.authBtnPosSelector).after($("\n      <div class=\"".concat($("a[download]:eq(0)").attr("class"), " btn setAuth\">") + cfg.authBtnText + "</div>\n    "));
-      $(".btn.setAuth").click(function () {
-        // The pop-up window in swaggerBox can be displayed, but the swaggerBox itself is hidden
-        var $swaggerBox = $(".swaggerBox").removeClass("hide").css({
-          visibility: "hidden",
-          height: "",
-          left: "",
-          top: "",
-          width: ""
-        });
-        $(".swagger-ui .auth-wrapper .authorize.unlocked").click(); // Open the pop-up window for setting auth
-        var $modal = $(".swagger-ui .dialog-ux .modal-ux");
-        $modal.css({
-          visibility: "visible"
-        });
-        $(".swagger-ui .auth-btn-wrapper .btn-done, .swagger-ui .dialog-ux .modal-ux-header .close-modal").click(function () {
-          $swaggerBox.addClass("hide").css({
-            visibility: ""
-          });
-          $modal.css({
-            visibility: ""
-          });
-        });
-      });
-    }
-
-    // Add try button
-    $(".http-verb").before("\n    <button class=\"tryBtn\">".concat(cfg.tryText, "</button>\n  "));
-    $(".tryBtn").css({
-      lineHeight: '20px',
-      marginRight: '7px'
-    }).click(function (event) {
-      event.stopPropagation();
-      var $tryBtn = $(this);
-      $(".swaggerShadow").remove(); // First clear all temporary elements
-      var $operation = $tryBtn.parents("[data-section-id]").last(); // Get the outermost api box
-      window.initTry.$operation = $operation;
-      if ($operation.hasClass("try") === true) {
-        // If the current API is already in the try state, uninstall and exit the function
-        $(".swaggerBox").addClass("hide").removeClass("show");
-        $operation.removeClass("try");
-        return false;
-      }
-      $("[data-section-id]").removeClass("try"); // Delete the try class name of all other APIs
-      $operation.addClass("try"); // Add try class name to the currently clicked api
-
-      // The following 3 lines add class names to some necessary elements to facilitate acquisition or identification
-      $(".try>div>div:nth-child(2)").addClass("apiBlock");
-      $(".try .apiBlock>div:nth-child(1)").addClass("fullApiBox");
-      if (window.initTry.cfg.redocVersion !== 'next' && window.compareVersions.compare(window.initTry.cfg.redocVersion, "2.0.0-rc.32", "<=")) {
-        $(".try .apiBlock>div>div:nth-child(1)").addClass("fullApi");
-      } else {
-        $(".try .apiBlock>div>button").addClass("fullApi");
-      }
-      var appendSwaggerShadow = function appendSwaggerShadow() {
-        return $(".try .fullApiBox").append("<div class=\"swaggerShadow\"></div>");
-      }; // Add a swaggerShadow element to synchronize the height of swagger and use it to occupy space
-      // If cfg.trySwaggerInApi === true then swaggerShadow will be added under fullApi, otherwise it may be under reqBox
-      if (cfg.trySwaggerInApi === true) {
-        appendSwaggerShadow();
-      } else {
-        var requestSel = ".try .apiBlock h3";
-        $(requestSel).parent().addClass("reqBox");
-        if ($(requestSel).length && $(requestSel).text().includes("Request")) {
-          $(".try .reqBox").append("<div class=\"swaggerShadow\"></div>");
-        } else {
-          appendSwaggerShadow();
+        tryItOutEnabled: !0,
+        ...e.swaggerOptions
+      },
+      redocOptions: [
+        n || e._openApiJSON || e.openApi || r,
+        l || { enableConsole: !0 },
+        g || document.getElementById("redoc-container"),
+        () => {
+          u && u(), k(a.swaggerOptions), $(".swaggerBox").addClass("hide"), a.pure && $(".swaggerBox").addClass("pure");
         }
-      }
-
-      // get the click method and api
-      var fullApi = $(".try .fullApi").text().replace(cfg.tryText, '').trim();
-      var _fullApi$match = fullApi.match(/(\w+)(.*)/),
-        _fullApi$match2 = _slicedToArray(_fullApi$match, 3),
-        method = _fullApi$match2[1],
-        api = _fullApi$match2[2];
-      var selStr = ".opblock-summary-".concat(method, " [data-path=\"").concat(api, "\"]");
-      var $swaggerApiDom = $(selStr);
-      var $opblock = $swaggerApiDom.parents(".opblock"); // Get the currently clicked swagger api, and it is not an expanded element
-      var getSwaggerBoxHeight = function getSwaggerBoxHeight() {
-        return getAbsolutePosition($(".swaggerBox")[0]).height + "px";
+      ]
+    };
+    return a;
+  }
+  function j() {
+    $("head").append(`
+    <style>
+      ${z}
+    </style>
+  `);
+  }
+  function k(e) {
+    $("body").append(`
+    <div class="swaggerBox">
+      <div id="swagger-ui"></div>
+    </div>
+  `), $("head").append(`<link rel="stylesheet" href="${s.initTry.cfg.cndPrefix}swagger-ui-dist@5/swagger-ui.css" />`), SwaggerUIBundle(e);
+  }
+  async function O(e, t) {
+    return new Promise(async (r, o) => {
+      await S(100), e.removeClass("hide").removeClass("show").attr("style", "").css({
+        // overflow: `initial`
+      }), e.addClass(h("modal-box")), t.addClass(h("modal-relative"));
+      const n = function(l) {
+        s.getComputedStyle(l.target, "::before").getPropertyValue("content") === '"modal-box"' && (e.removeClass(h("modal-box")), t.removeClass(h("modal-relative")), $("body").off("click", n), r());
       };
-      var getShadowPos = function getShadowPos() {
-        // Get the position of swaggerShadow
-        var pos = {};
-        pos = getAbsolutePosition($(".try .swaggerShadow")[0]) || {};
-        pos = Object.keys(pos).reduce(function (prev, cur, index) {
-          // Add px to the number without unit, undefined when the number is 0
-          var val = pos[cur];
-          return _objectSpread(_objectSpread({}, prev), {}, _defineProperty({}, cur, _typeof(val) === "number" ? val > 0 ? "".concat(val, "px") : undefined : val));
-        }, {});
-        return pos;
-      };
-      var pos = getShadowPos();
-      var oldHeight = pos.height ? "".concat(pos.height) : undefined;
-      if ($opblock.hasClass("open") === false) {
-        $swaggerApiDom.click(); // turn on
-      }
-
-      $opblock.addClass("open");
-      function renderPos(onlyWhenVisible) {
-        var pos = getShadowPos();
-        if (!onlyWhenVisible || $(".swaggerBox").hasClass("show")) {
-          // Move swagger to the position of swaggerShadow
-          $(".swaggerBox").css({
-            left: "".concat(pos.left),
-            top: "".concat(pos.top),
-            width: "".concat(pos.width),
-            height: oldHeight
-          }).removeClass("hide").addClass('show');
-        }
-
-        // Synchronize the size of swaggerShadow to make it as big as swaggerBox
-        $(".swaggerShadow").css({
-          height: getSwaggerBoxHeight()
-        });
-        // scroll the swagger view to the same api position
-        $(".swaggerBox").scrollTo($swaggerApiDom.parent());
-        changeFn();
-      }
-      function changeFn() {
-        var opblockPos = getAbsolutePosition($opblock[0]);
-        if (opblockPos.height === 0) {
-          return false; // The height is 0, no processing
-        } else {
-          var newHeight = "".concat(opblockPos.height, "px");
-          if (oldHeight !== newHeight) {
-            $(".swaggerBox").scrollTo($swaggerApiDom.parent());
-            $(".swaggerBox").css({
-              height: newHeight
-            });
-            $(".swaggerShadow").css({
-              height: getSwaggerBoxHeight()
-            });
-            oldHeight = newHeight;
-          }
-        }
-      }
-      renderPos();
-      setTimeout(renderPos, 0);
-      window.initTry.renderPos = renderPos;
-      var observer = new MutationObserver(changeFn);
-      observer.disconnect();
-      observer.observe($opblock[0], {
-        attributes: true,
-        childList: true,
-        subtree: true
-      });
-      var redoc_dom = window.initTry.cfg.redocOptions[2];
-      $(redoc_dom).off('click.redoc_dom').on('click.redoc_dom', function () {
-        renderPos();
-        if (isVisible(document.querySelector(".try .fullApiBox")) === false) {
-          $(".swaggerBox").addClass("hide").removeClass("show");
-          window.initTry.$operation.removeClass("try");
-        }
-      });
+      await S(500), $("body").on("click", n);
     });
-
-    // When changing the browser window size, reset the state of swaggerBox
-    $(window).resize(debounce(function () {
-      window.initTry.renderPos(true);
+  }
+  function V(e) {
+    $(e.cfgBtnPosSelector).after($(`
+      <div class="${$("a[download]:eq(0)").attr("class")} btn setAuth">` + e.cfgBtnText + `</div>
+    `)), $(".btn.setAuth").click(async () => {
+      const t = $(".swaggerBox");
+      await O(t, $(".swagger-ui .scheme-container")), t.addClass("hide");
+    }), $(".http-verb").before(`
+    <button class="tryBtn">${e.tryText}</button>
+  `), $(".tryBtn").css({
+      lineHeight: "20px",
+      marginRight: "7px"
+    }).click(function(t) {
+      t.stopPropagation();
+      const r = $(this);
+      $(".swaggerShadow").remove();
+      const o = r.parents("[data-section-id]").last();
+      if (s.initTry.$operation = o, o.hasClass("try") === !0)
+        return $(".swaggerBox").addClass("hide").removeClass("show"), o.removeClass("try"), !1;
+      $("[data-section-id]").removeClass("try"), o.addClass("try"), $(".try>div>div:nth-child(2)").addClass("apiBlock"), $(".try .apiBlock>div:nth-child(1)").addClass("fullApiBox"), s.initTry.cfg.redocVersion() !== "next" && s.compareVersions.compare(s.initTry.cfg.redocVersion(), "2.0.0-rc.32", "<=") ? $(".try .apiBlock>div>div:nth-child(1)").addClass("fullApi") : $(".try .apiBlock>div>button").addClass("fullApi");
+      const n = () => $(".try .fullApiBox").append('<div class="swaggerShadow"></div>');
+      if (e.trySwaggerInApi === !0)
+        n();
+      else {
+        const i = ".try .apiBlock h3";
+        $(i).parent().addClass("reqBox"), $(i).length && $(i).text().includes("Request") ? $(".try .reqBox").append('<div class="swaggerShadow"></div>') : n();
+      }
+      const l = $(".try .fullApi").text().replace(e.tryText, "").trim(), [, g, u] = l.match(/(\w+)(.*)/), v = `.opblock-summary-${g} [data-path="${u}"]`, a = $(v), d = a.parents(".opblock"), y = () => m($(".swaggerBox")[0]).height + "px", f = () => {
+        let i = {};
+        return i = m($(".try .swaggerShadow")[0]) || {}, i = Object.keys(i).reduce((c, P, E) => {
+          const b = i[P];
+          return {
+            ...c,
+            [P]: typeof b == "number" ? b > 0 ? `${b}px` : x : b
+          };
+        }, {}), i;
+      }, T = f();
+      let B = T.height ? `${T.height}` : x;
+      d.hasClass("open") === !1 && a.click(), d.addClass("open");
+      function w(i) {
+        let c = f();
+        (!i || $(".swaggerBox").hasClass("show")) && $(".swaggerBox").css({
+          left: `${c.left}`,
+          top: `${c.top}`,
+          width: `${c.width}`,
+          height: B
+        }).removeClass("hide").addClass("show"), $(".swaggerShadow").css({
+          height: y()
+        }), $(".swaggerBox").scrollTo(a.parent()), C();
+      }
+      function C() {
+        const i = m(d[0]);
+        if (i.height === 0)
+          return !1;
+        {
+          let c = `${i.height}px`;
+          B !== c && ($(".swaggerBox").scrollTo(a.parent()), $(".swaggerBox").css({
+            height: c
+          }), $(".swaggerShadow").css({
+            height: y()
+          }), B = c);
+        }
+      }
+      w(), setTimeout(w, 0), s.initTry.renderPos = w;
+      const A = new MutationObserver(C);
+      A.disconnect(), A.observe(d[0], {
+        attributes: !0,
+        childList: !0,
+        subtree: !0
+      });
+      const I = s.initTry.cfg.redocOptions[2];
+      $(I).off("click.redoc_dom").on("click.redoc_dom", () => {
+        w(), H(document.querySelector(".try .fullApiBox")) === !1 && ($(".swaggerBox").addClass("hide").removeClass("show"), s.initTry.$operation.removeClass("try"));
+      });
+    }), $(s).resize(L(() => {
+      s.initTry.renderPos(!0);
     }, 500));
   }
-  function isVisible(element) {
-    if (!element) {
-      return false;
-    }
-    var isVisible = true;
-    var parentElement = element;
-    while (parentElement) {
-      var parentStyle = getComputedStyle(parentElement);
-      if (false || parentStyle.display === 'none' || parentStyle.visibility === 'hidden' || parentStyle.opacity === '0' || parentStyle.opacity === '0.0') {
-        isVisible = false;
+  function H(e) {
+    if (!e)
+      return !1;
+    let t = !0, r = e;
+    for (; r; ) {
+      const o = getComputedStyle(r);
+      if (o.display === "none" || o.visibility === "hidden" || o.opacity === "0" || o.opacity === "0.0") {
+        t = !1;
         break;
       }
-      parentElement = parentElement.offsetParent;
+      r = r.offsetParent;
     }
-    return isVisible;
+    return t;
   }
-  function loadScript(src) {
-    return new Promise(function (resolve, reject) {
-      var script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.onload = resolve;
-      script.onerror = reject;
-      script.src = src;
-      document.head.append(script);
+  function p(e) {
+    return new Promise((t, r) => {
+      const o = document.createElement("script");
+      o.type = "text/javascript", o.onload = t, o.onerror = r, o.src = e, document.head.append(o);
     });
   }
-  function debounce(fn, wait) {
-    // anti-shake
-    var timer = null;
-    return function () {
-      if (timer !== null) {
-        clearTimeout(timer);
-      }
-      timer = setTimeout(fn, wait);
+  function L(e, t) {
+    let r = null;
+    return function() {
+      r !== null && clearTimeout(r), r = setTimeout(e, t);
     };
   }
-  function getAbsolutePosition(domObj) {
-    // Get element position and size
-    // If the function has no value, the return object is empty
-    if (!domObj) return null;
-    var width = domObj.offsetWidth;
-    var height = domObj.offsetHeight;
-    // Start traversing outward from the target element, accumulate top and left values
-    var top;
-    var left;
-    for (top = domObj.offsetTop, left = domObj.offsetLeft; domObj = domObj.offsetParent;) {
-      top += domObj.offsetTop;
-      left += domObj.offsetLeft;
-    }
-    var right = document.body.offsetWidth - width - left;
-    var bottom = document.body.offsetHeight - height - top;
-
-    // Returns the coordinate set of positioned elements
-    return {
-      width: width,
-      height: height,
-      top: top,
-      left: left,
-      right: right,
-      bottom: bottom
-    };
+  function m(e) {
+    if (!e) return null;
+    const t = e.offsetWidth, r = e.offsetHeight;
+    let o, n;
+    for (o = e.offsetTop, n = e.offsetLeft; e = e.offsetParent; )
+      o += e.offsetTop, n += e.offsetLeft;
+    const l = document.body.offsetWidth - t - n, g = document.body.offsetHeight - r - o;
+    return { width: t, height: r, top: o, left: n, right: l, bottom: g };
   }
-  function dataType(data, type) {
-    var dataType = Object.prototype.toString.call(data).match(/\s(.+)]/)[1].toLowerCase();
-    return type ? dataType === type.toLowerCase() : dataType;
+  function R(e, t) {
+    return Object.prototype.toString.call(e).match(/\s(.+)]/)[1].toLowerCase() === t.toLowerCase();
+  }
+  async function S(e = 100) {
+    return new Promise((t) => setTimeout(t, e));
+  }
+  function h(e = "") {
+    return `redoc-try-${e}`;
   }
 })(window);

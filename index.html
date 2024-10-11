@@ -1,36 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>redoc try demo</title>
-</head>
-<body>
-  <div id="redoc-container"></div>
-  <script>
-    function getQueryString(name) {
-      const reg = new RegExp(`(^|&)` + name + `=([^&]*)(&|$)`)
-      const r =
-        window.location.search.substr(1).match(reg) ||
-        window.location.hash
-          .substring(window.location.hash.search(/\?/) + 1)
-          .match(reg)
-      return r != null ? decodeURIComponent(r[2]) : ``
-    }
-    window.initTryOptions = {
-      openApi: getQueryString(`openApi`),
-    }
-    !window.initTryOptions.openApi && (delete window.initTryOptions.openApi);
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/redoc@2.0.0-rc.55/bundles/redoc.standalone.min.js"> </script>
-  <script src="https://cdn.jsdelivr.net/gh/wll8/redoc-try@1.4.9/dist/try.js"></script>
-  <script>
-    // initTry(`https://petstore.swagger.io/v2/swagger.json`)
-    initTry({
-      openApi: `https://petstore.swagger.io/v2/swagger.json`,
-      redocOptions: {scrollYOffset: 50},
-      ...window.initTryOptions,
-    })
-  </script>
-</body>
+  </head>
+  <body>
+    <div id="redoc-container"></div>
+    <script>
+      function getQueryString(name) {
+        const reg = new RegExp(`(^|&)` + name + `=([^&]*)(&|$)`)
+        const r =
+          window.location.search.substr(1).match(reg) ||
+          window.location.hash
+            .substring(window.location.hash.search(/\?/) + 1)
+            .match(reg)
+        return r != null ? decodeURIComponent(r[2]) : ``
+      }
+      window.initTryOptions = {
+        openApi: getQueryString(`openApi`),
+      }
+      !window.initTryOptions.openApi && (delete window.initTryOptions.openApi);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/redoc@2.1.5/bundles/redoc.standalone.min.js"> </script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>
