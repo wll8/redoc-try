@@ -1,6 +1,6 @@
 {
   "name": "redoc-try",
-  "version": "1.4.9",
+  "version": "1.4.10",
   "description": "[👉 online preview](https://wll8.github.io/redoc-try/index.html)",
   "type": "module",
   "main": "dist/try.js",
