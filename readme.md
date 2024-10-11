@@ -6,7 +6,7 @@
 
 Add `Try it out` function like [swagger](https://petstore.swagger.io/) on [redoc](https://github.com/Redocly/redoc), Compatible with `yaml/json/3.0/2.0`.
 
-![redoc try](https://github.com/wll8/redoc-try/raw/master/redoc_show.png)
+![redoc try](https://github.com/wll8/redoc-try/blob/main/redoc_show.png?raw=true)
 
 ## how to use?
 
